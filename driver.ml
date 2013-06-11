@@ -11,6 +11,7 @@ open Mylexer;;
 (* print out each token to check *)
 let print tk =
 	match tk with
+	| COMMENT e -> print_string("COMMENT("^e^") ")
 	| ID e -> print_string ("ID("^ e^ ") ")
 	| INTEGER		-> print_string("INTEGER ")
 	| BOOL		-> print_string("BOOL ")
@@ -19,7 +20,7 @@ let print tk =
 	| BOOL_LIT	e	-> print_string("BOOL_LIT("^(string_of_bool e)^") ")
 	| BREAK		-> print_string("BREAK ")
 	| FLOAT		-> print_string("FLOAT ")
-	| STRING_LIT 	-> print_string("STRING_LIT ")
+	| STRING_LIT e	-> print_string("STRING_LIT("^e^") ")
 	| FLOAT_LIT	e	-> print_string("FLOAT_LIT("^(string_of_float e)^") ")
 	| INT_LIT e 		-> print_string("INT_LIT("^(string_of_int e)^") ")
 	| THEN		-> print_string("THEN ")
