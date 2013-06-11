@@ -1,0 +1,3 @@
+"He told me:\n \t \" Fuck you bitch! ^^ \" \f\r\\\"... \""
+"\b\r \n"
+bool true false

@@ -1,0 +1,6 @@
+cygwin warning:
+  MS-DOS style path detected: testcases\test3.txt
+  Preferred POSIX equivalent is: testcases/test3.txt
+  CYGWIN environment variable option "nodosfilewarning" turns off this warning.
+  Consult the user's guide for more details about POSIX paths:
+    http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
