@@ -11,7 +11,6 @@ open Mylexer;;
 (* print out each token to check *)
 let print tk =
 	match tk with
-	| COMMENT e -> print_string("COMMENT("^e^") ")
 	| ID e -> print_string ("ID("^ e^ ") ")
 	| INTEGER		-> print_string("INTEGER ")
 	| BOOL		-> print_string("BOOL ")
