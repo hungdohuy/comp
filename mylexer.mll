@@ -160,7 +160,7 @@ and
 	|"*)"	{token lexbuf}
 	| eof	{raise UnterminateComment}
 	| _	{comment1 lexbuf}
-and
+and 
 	comment2 = parse
 	|'\n'|eof	{token lexbuf}
-	| _	{comment2 lexbuf}
+	| _			{comment2 lexbuf}
