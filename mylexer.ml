@@ -1,4 +1,4 @@
-# 5 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 5 "mylexer.mll"
  
 	
 open Lexing
@@ -67,7 +67,7 @@ exception UnrecognizeEscapedChar of string
 exception UnterminateString
 exception UnterminateComment
 
-# 71 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 71 "mylexer.ml"
 let __ocaml_lex_tables = {
   Lexing.lex_base = 
    "\000\000\194\255\195\255\080\000\090\000\199\255\165\000\240\000\
@@ -2202,334 +2202,334 @@ let rec token lexbuf =
 and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 82 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 82 "mylexer.mll"
                ( token lexbuf )
-# 2208 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2208 "mylexer.ml"
 
   | 1 ->
-# 83 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 83 "mylexer.mll"
            ( new_line lexbuf; token lexbuf )
-# 2213 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2213 "mylexer.ml"
 
   | 2 ->
-# 84 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 84 "mylexer.mll"
            (comment1 lexbuf)
-# 2218 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2218 "mylexer.ml"
 
   | 3 ->
-# 85 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 85 "mylexer.mll"
           (comment2 lexbuf)
-# 2223 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2223 "mylexer.ml"
 
   | 4 ->
-# 87 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 87 "mylexer.mll"
           (LPAREN)
-# 2228 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2228 "mylexer.ml"
 
   | 5 ->
-# 88 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 88 "mylexer.mll"
           (RPAREN)
-# 2233 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2233 "mylexer.ml"
 
   | 6 ->
-# 89 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 89 "mylexer.mll"
           (LSQBRA)
-# 2238 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2238 "mylexer.ml"
 
   | 7 ->
-# 90 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 90 "mylexer.mll"
           (RSQBRA)
-# 2243 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2243 "mylexer.ml"
 
   | 8 ->
-# 91 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 91 "mylexer.mll"
           (LCURBRA)
-# 2248 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2248 "mylexer.ml"
 
   | 9 ->
-# 92 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 92 "mylexer.mll"
           (RCURBRA)
-# 2253 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2253 "mylexer.ml"
 
   | 10 ->
-# 93 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 93 "mylexer.mll"
            (COLON)
-# 2258 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2258 "mylexer.ml"
 
   | 11 ->
-# 94 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 94 "mylexer.mll"
            (SEMICOLON)
-# 2263 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2263 "mylexer.ml"
 
   | 12 ->
-# 95 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 95 "mylexer.mll"
            (DOUBLECOLON)
-# 2268 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2268 "mylexer.ml"
 
   | 13 ->
-# 96 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 96 "mylexer.mll"
           (DOT)
-# 2273 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2273 "mylexer.ml"
 
   | 14 ->
-# 97 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 97 "mylexer.mll"
           (COMMA)
-# 2278 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2278 "mylexer.ml"
 
   | 15 ->
-# 99 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 99 "mylexer.mll"
           (ADD)
-# 2283 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2283 "mylexer.ml"
 
   | 16 ->
-# 100 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 100 "mylexer.mll"
           (MUL)
-# 2288 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2288 "mylexer.ml"
 
   | 17 ->
-# 101 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 101 "mylexer.mll"
            (INT_DIV)
-# 2293 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2293 "mylexer.ml"
 
   | 18 ->
-# 102 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 102 "mylexer.mll"
            (ASSIGN)
-# 2298 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2298 "mylexer.ml"
 
   | 19 ->
-# 103 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 103 "mylexer.mll"
           (LESS)
-# 2303 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2303 "mylexer.ml"
 
   | 20 ->
-# 104 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 104 "mylexer.mll"
            (LESS_EQUAL)
-# 2308 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2308 "mylexer.ml"
 
   | 21 ->
-# 105 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 105 "mylexer.mll"
            (NEQUAL)
-# 2313 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2313 "mylexer.ml"
 
   | 22 ->
-# 106 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 106 "mylexer.mll"
           (LOGIC_NOT)
-# 2318 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2318 "mylexer.ml"
 
   | 23 ->
-# 107 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 107 "mylexer.mll"
           (CONCAT)
-# 2323 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2323 "mylexer.ml"
 
   | 24 ->
-# 108 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 108 "mylexer.mll"
           (SUB)
-# 2328 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2328 "mylexer.ml"
 
   | 25 ->
-# 109 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 109 "mylexer.mll"
           (FLOAT_DIV)
-# 2333 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2333 "mylexer.ml"
 
   | 26 ->
-# 110 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 110 "mylexer.mll"
           (MOD)
-# 2338 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2338 "mylexer.ml"
 
   | 27 ->
-# 111 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 111 "mylexer.mll"
            (EQUAL)
-# 2343 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2343 "mylexer.ml"
 
   | 28 ->
-# 112 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 112 "mylexer.mll"
           (GREATER)
-# 2348 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2348 "mylexer.ml"
 
   | 29 ->
-# 113 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 113 "mylexer.mll"
            (GREATER_EQUAL)
-# 2353 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2353 "mylexer.ml"
 
   | 30 ->
-# 114 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 114 "mylexer.mll"
            (LOGIC_AND)
-# 2358 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2358 "mylexer.ml"
 
   | 31 ->
-# 115 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 115 "mylexer.mll"
            (LOGIC_OR)
-# 2363 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2363 "mylexer.ml"
 
   | 32 ->
-# 117 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 117 "mylexer.mll"
                (INTEGER)
-# 2368 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2368 "mylexer.ml"
 
   | 33 ->
-# 118 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 118 "mylexer.mll"
             (BOOL)
-# 2373 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2373 "mylexer.ml"
 
   | 34 ->
-# 119 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 119 "mylexer.mll"
                (EXTENDS)
-# 2378 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2378 "mylexer.ml"
 
   | 35 ->
-# 120 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 120 "mylexer.mll"
               (STRING)
-# 2383 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2383 "mylexer.ml"
 
   | 36 ->
-# 121 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 121 "mylexer.mll"
              (BREAK)
-# 2388 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2388 "mylexer.ml"
 
   | 37 ->
-# 122 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 122 "mylexer.mll"
              (FLOAT)
-# 2393 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2393 "mylexer.ml"
 
   | 38 ->
-# 123 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 123 "mylexer.mll"
             (THEN)
-# 2398 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2398 "mylexer.ml"
 
   | 39 ->
-# 124 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 124 "mylexer.mll"
             (VOID)
-# 2403 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2403 "mylexer.ml"
 
   | 40 ->
-# 125 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 125 "mylexer.mll"
              (CLASS)
-# 2408 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2408 "mylexer.ml"
 
   | 41 ->
-# 126 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 126 "mylexer.mll"
             (FOR)
-# 2413 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2413 "mylexer.ml"
 
   | 42 ->
-# 127 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 127 "mylexer.mll"
            (TO)
-# 2418 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2418 "mylexer.ml"
 
   | 43 ->
-# 128 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 128 "mylexer.mll"
             (NULL)
-# 2423 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2423 "mylexer.ml"
 
   | 44 ->
-# 129 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 129 "mylexer.mll"
                (CONTINUE)
-# 2428 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2428 "mylexer.ml"
 
   | 45 ->
-# 130 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 130 "mylexer.mll"
            (IF)
-# 2433 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2433 "mylexer.ml"
 
   | 46 ->
-# 131 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 131 "mylexer.mll"
              (UNTIL)
-# 2438 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2438 "mylexer.ml"
 
   | 47 ->
-# 132 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 132 "mylexer.mll"
             (SELF)
-# 2443 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2443 "mylexer.ml"
 
   | 48 ->
-# 133 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 133 "mylexer.mll"
            (DO)
-# 2448 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2448 "mylexer.ml"
 
   | 49 ->
-# 134 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 134 "mylexer.mll"
              (WHILE)
-# 2453 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2453 "mylexer.ml"
 
   | 50 ->
-# 135 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 135 "mylexer.mll"
               (DOWNTO)
-# 2458 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2458 "mylexer.ml"
 
   | 51 ->
-# 136 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 136 "mylexer.mll"
             (NEW)
-# 2463 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2463 "mylexer.ml"
 
   | 52 ->
-# 137 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 137 "mylexer.mll"
               (RETURN)
-# 2468 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2468 "mylexer.ml"
 
   | 53 ->
-# 138 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 138 "mylexer.mll"
             (ELSE)
-# 2473 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2473 "mylexer.ml"
 
   | 54 ->
-# 139 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 139 "mylexer.mll"
               (REPEAT)
-# 2478 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2478 "mylexer.ml"
 
   | 55 ->
 let
-# 140 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 140 "mylexer.mll"
                      e
-# 2484 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2484 "mylexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 140 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 140 "mylexer.mll"
                        (BOOL_LIT (bool_of_string e))
-# 2488 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2488 "mylexer.ml"
 
   | 56 ->
-# 142 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 142 "mylexer.mll"
           (string_lit "" lexbuf)
-# 2493 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2493 "mylexer.ml"
 
   | 57 ->
 let
-# 143 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 143 "mylexer.mll"
                              e
-# 2499 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2499 "mylexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 143 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 143 "mylexer.mll"
                                (ID e)
-# 2503 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2503 "mylexer.ml"
 
   | 58 ->
 let
-# 144 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 144 "mylexer.mll"
                                                                                        e
-# 2509 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2509 "mylexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 144 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 144 "mylexer.mll"
                                                                                          (FLOAT_LIT (float_of_string e))
-# 2513 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2513 "mylexer.ml"
 
   | 59 ->
 let
-# 145 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 145 "mylexer.mll"
              e
-# 2519 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2519 "mylexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 145 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 145 "mylexer.mll"
                 (INT_LIT (int_of_string e))
-# 2523 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2523 "mylexer.ml"
 
   | 60 ->
-# 146 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 146 "mylexer.mll"
               ( EOF )
-# 2528 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2528 "mylexer.ml"
 
   | 61 ->
-# 147 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 147 "mylexer.mll"
                 ( raise (UnrecognizeChar (lexeme lexbuf)) )
-# 2533 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2533 "mylexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; __ocaml_lex_token_rec lexbuf __ocaml_lex_state
 
@@ -2539,33 +2539,33 @@ and __ocaml_lex_string_lit_rec a lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
 let
-# 150 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 150 "mylexer.mll"
           c
-# 2545 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2545 "mylexer.ml"
 = Lexing.sub_lexeme_char lexbuf lexbuf.Lexing.lex_start_pos in
-# 150 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 150 "mylexer.mll"
              (escape (a^(String.make 1 c)) lexbuf)
-# 2549 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2549 "mylexer.ml"
 
   | 1 ->
-# 151 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 151 "mylexer.mll"
          (STRING_LIT a)
-# 2554 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2554 "mylexer.ml"
 
   | 2 ->
-# 152 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 152 "mylexer.mll"
             (raise UnterminateString)
-# 2559 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2559 "mylexer.ml"
 
   | 3 ->
 let
-# 153 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 153 "mylexer.mll"
         b
-# 2565 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2565 "mylexer.ml"
 = Lexing.sub_lexeme_char lexbuf lexbuf.Lexing.lex_start_pos in
-# 153 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 153 "mylexer.mll"
            (string_lit (a^(String.make 1 b)) lexbuf)
-# 2569 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2569 "mylexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; __ocaml_lex_string_lit_rec a lexbuf __ocaml_lex_state
 
@@ -2575,18 +2575,18 @@ and __ocaml_lex_escape_rec c lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
 let
-# 156 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 156 "mylexer.mll"
                                     d
-# 2581 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2581 "mylexer.ml"
 = Lexing.sub_lexeme_char lexbuf lexbuf.Lexing.lex_start_pos in
-# 156 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 156 "mylexer.mll"
                                       (string_lit (c^(String.make 1 d)) lexbuf)
-# 2585 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2585 "mylexer.ml"
 
   | 1 ->
-# 157 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 157 "mylexer.mll"
       (raise (UnrecognizeEscapedChar (lexeme lexbuf)) )
-# 2590 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2590 "mylexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; __ocaml_lex_escape_rec c lexbuf __ocaml_lex_state
 
@@ -2595,19 +2595,19 @@ and comment1 lexbuf =
 and __ocaml_lex_comment1_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 160 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 160 "mylexer.mll"
        (token lexbuf)
-# 2601 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2601 "mylexer.ml"
 
   | 1 ->
-# 161 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 161 "mylexer.mll"
        (raise UnterminateComment)
-# 2606 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2606 "mylexer.ml"
 
   | 2 ->
-# 162 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
-     (comment1 lexbuf)
-# 2611 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 162 "mylexer.mll"
+      (comment1 lexbuf)
+# 2611 "mylexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; __ocaml_lex_comment1_rec lexbuf __ocaml_lex_state
 
@@ -2616,14 +2616,14 @@ and comment2 lexbuf =
 and __ocaml_lex_comment2_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 165 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 165 "mylexer.mll"
            (token lexbuf)
-# 2622 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2622 "mylexer.ml"
 
   | 1 ->
-# 166 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.mll"
+# 166 "mylexer.mll"
        (comment2 lexbuf)
-# 2627 "E:\Study\PUF - HUNGDO\M1\2012\COMP\Assignment\mylexer.ml"
+# 2627 "mylexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; __ocaml_lex_comment2_rec lexbuf __ocaml_lex_state
 

@@ -144,7 +144,7 @@ rule
 	| int_part "." ['0' - '9']* | int_part "." ['0' - '9']* ex_part | int_part ex_part as e	{FLOAT_LIT (float_of_string e)}
 	| digit+ as e		{INT_LIT (int_of_string e)}
 	| eof	     		{ EOF }
-	| _          		{ raise (UnrecognizeChar (lexeme lexbuf)) } (*throw exception UnrecognizeChar*)
+	| _          		{ raise (UnrecognizeChar (lexeme lexbuf)) } 
 and
 	string_lit a = parse
 	|'\\' as c		{escape (a^(String.make 1 c)) lexbuf} (*call escape entry point*)
@@ -159,7 +159,7 @@ and
 	comment1 = parse
 	|"*)"	{token lexbuf}
 	| eof	{raise UnterminateComment}
-	| _	{comment1 lexbuf}
+	| _		{comment1 lexbuf}
 and 
 	comment2 = parse
 	|'\n'|eof	{token lexbuf}
