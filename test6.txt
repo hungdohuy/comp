@@ -1,0 +1,45 @@
+(* This is a block comment, that
+may span in many lines*)
+a := 5;#this is a line comment
+(* This is a block comment so #has no meaning here *)
+#This is a line comment so (* has no meaning here
+
+bool BOOL break class continue do downto else
+extends float for if integer new repeat
+string then to until while return true
+false void null self
+
++ #Addition or unary plus - Subtraction or minus
+* #Multiplication / Float division
+\ #Integer Division % Modulus
+:= #Assignment == Equal
+< #Less than > Greater than
+<= #Less than or equal >= Greater than or equal
+<> #Not equal && Logical AND
+! #Logical NOT || Logical OR
+^ #Concatenation new Object creation
+
+- #Subtraction or minus
+/ #Float division
+% #Modulus
+== #Equal
+> #Greater than
+>= #Greater than or equal
+&& #Logical AND
+|| #Logical OR
+new #Object creation
+
+The following characters are the separators: left square bracket ([), right square bracket
+(]), left parenthesis ({), right parenthesis (}), left bracket ((), right bracket ()), semi-colone (;), colon (:), double colon (::), dot (.), and comma (,)
+
+0 100 255 2500
+9.0 12e8 1. 0.33E-3 128e+42
+
+.12 143e 
+true false True FalSe
+
+"This is a string containing tab \t"
+
+"He asked me: Where is John?"
+
+"He asked me: \"Where is John?\""
