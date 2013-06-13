@@ -7,7 +7,7 @@
 open Mylexer;;
 (****************************************************************************)
 
-
+let sum = ref 0
 (* print out each token to check *)
 let print tk =
 	match tk with
@@ -73,17 +73,18 @@ let print tk =
 let rec pp tk buf =
 	let token = tk buf in
 	match token with
-	EOF -> (print token; 1)
-	| _ -> (print token; let sum = pp tk buf in sum+1)
+	EOF -> (sum := !sum + 1;print token)
+	| _ -> (sum := !sum + 1;print token;pp tk buf)
 
 (* create lexer buffer from a channel *)
 let parse_program chan =
-  let lexbuf = Lexing.from_channel chan in  try
-  (let sum = pp Mylexer.token lexbuf in print_string("Total token detected is: "^(string_of_int sum)^"\n"))
-  with UnrecognizeChar x -> print_string ("Unrecognized Char "^x^"\n")
-  | UnrecognizeEscapedChar x -> print_string("UnrecognizeEscapedChar "^x^"\n")
-  | UnterminateString -> print_string "Unterminated string\n"
-  | UnterminateComment -> print_string "Unterminated Comment\n"
+  let lexbuf = Lexing.from_channel chan in (
+  	try pp Mylexer.token lexbuf
+	  with UnrecognizeChar x -> print_string ("Unrecognized Char "^x^"\n")
+	  | UnrecognizeEscapedChar x -> print_string("UnrecognizeEscapedChar "^x^"\n")
+	  | UnterminateString -> print_string ("Unterminated string\n")
+	  | UnterminateComment -> print_string ("Unterminated Comment\n")
+); print_string("Total token detected is: "^(string_of_int !sum)^"\n")
 (* main function *)
 let driver filename =
   let input_chan = open_in filename in
