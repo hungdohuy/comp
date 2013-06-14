@@ -3,7 +3,8 @@
 (* Your id: 	PUFMINF1204    *)
 
 {
-	
+
+open Myparser	
 open Lexing
 
 type tokentype =
@@ -77,8 +78,7 @@ let int_part = ['0'-'9']+
 let ex_part = ['e' 'E']['+' '-']?['0' - '9']+
 
 (*---------------------------------------------------------------------------------*)
-rule 
-	token = parse
+rule token = parse
 	| [' ' '\t'] 	{ token lexbuf } (*skip blanks*)
 	| '\n'				{ new_line lexbuf; token lexbuf }
 	| "(*"				{comment1 lexbuf}
