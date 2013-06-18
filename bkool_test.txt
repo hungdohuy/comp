@@ -1,4 +1,16 @@
-000000123
-http://www.pufhcm.edu.vn
-fasdf
-gasdfasdfasgw3::35#:^3$#%""
+class Main{
+	a,b,c,d,e: integer;
+	abd: string;
+	void main();
+	dsad,afd:float;
+	
+}
+
+
+class asdf {
+	fsafsd:integer;
+}
+
+class shape{
+	ad:bool;
+}
