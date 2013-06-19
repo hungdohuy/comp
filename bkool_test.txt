@@ -2,6 +2,7 @@ class Main{
 	a,b,c,d,e: integer;
 	abd: string;
 	void main();
+	integer abc(a:float);
 	dsad,afd:float;
 	
 }
@@ -9,6 +10,7 @@ class Main{
 
 class asdf {
 	fsafsd:integer;
+	float afas(s,a,f,s:integer;)
 }
 
 class shape{

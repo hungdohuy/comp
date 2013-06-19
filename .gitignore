@@ -12,3 +12,6 @@
 *.exe
 *.out
 mylexer.ml
+myparser.ml
+myparser.mli
+myparser.output

@@ -81,9 +81,9 @@
 
 program:
 	main_decl EOF	{} 
-	|main_decl manyclassdecl	EOF	{}
-	|manyclassdecl main_decl EOF	{}
-
+	|main_decl many_class_decl	EOF	{}
+	|many_class_decl main_decl	EOF	{}
+	|many_class_decl main_decl many_class_decl EOF	{}
 ;
 
 main_decl:
@@ -100,10 +100,6 @@ main_member_decl:
 	|list_members_decl main_method list_members_decl	{}
 ;
 
-manyconstdecl: 
-	oneconstdecl	{}
-;
-
 common_type:
 	INTEGER	{}
 	|FLOAT	{}
@@ -111,37 +107,51 @@ common_type:
 	|BOOL	{}
 ;
 
-
-oneconstdecl: 
-	ID EQUAL common_type SEMICOLON {}
-	|ID EQUAL common_type {}
+return_type:
+	common_type	{}
+	|VOID	{}
 ;
 
-manyclassdecl:
-	oneclassdecl {}
-	|oneclassdecl manyclassdecl	{}
+many_class_decl:
+	one_class_decl {}
+	|one_class_decl many_class_decl	{}
 ;
 
-oneclassdecl:
+one_class_decl:
 	CLASS ID LCURBRA list_members_decl RCURBRA {}
 ;
 
 list_members_decl:
-	member_decl	{}
-	|member_decl list_members_decl	{}
+	attributes_decl	{}
+	|method_prototype	{}
 ;
 
-member_decl:
+method_prototype:
+	return_type ID LPAREN list_params RPAREN SEMICOLON	{}
+;
+
+list_params:
+	{}
+	|combine_var_decl	{}
+	|combine_var_decl SEMICOLON another_param	{}
+;
+
+another_param:
+	combine_var_decl {}
+	|combine_var_decl SEMICOLON another_param	{}
+;
+
+attributes_decl:
 	many_variables_decl	{}
 ;
 
 many_variables_decl:
-	onerow_var_decl	{}
-	|onerow_var_decl many_variables_decl	{}
+	combine_var_decl SEMICOLON	{}
+	|combine_var_decl SEMICOLON many_variables_decl	{}
 ;
 
-onerow_var_decl:
-	list_id COLON common_type SEMICOLON	{}
+combine_var_decl:
+	list_id COLON common_type 	{}
 ;
 
 list_id:
@@ -160,6 +170,5 @@ list_id:
 	|mem_access	{}
 	|obj_creation	{};
 */
-
 
 
