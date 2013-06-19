@@ -11,7 +11,7 @@
 *.cmxa
 *.exe
 *.out
+*.output
+*.mli
 mylexer.ml
 myparser.ml
-myparser.mli
-myparser.output

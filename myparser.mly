@@ -21,8 +21,6 @@
 %token DOUBLECOLON
 %token DOT
 %token COMMA
-%token MAIN_CLASS
-%token MAIN_METHOD
 %token INTEGER
 %token BOOL
 %token EXTENDS
@@ -80,36 +78,7 @@
 /* Rule definitions */
 
 program:
-	main_decl EOF	{} 
-	|main_decl many_class_decl	EOF	{}
-	|many_class_decl main_decl	EOF	{}
-	|many_class_decl main_decl many_class_decl EOF	{}
-;
-
-main_decl:
-	CLASS MAIN_CLASS LCURBRA main_member_decl RCURBRA	{}
-;
-
-main_method:
-	VOID MAIN_METHOD LPAREN RPAREN SEMICOLON	{}
-;
-main_member_decl:
-	main_method	{}
-	|main_method list_members_decl	{}
-	|list_members_decl main_method	{}
-	|list_members_decl main_method list_members_decl	{}
-;
-
-common_type:
-	INTEGER	{}
-	|FLOAT	{}
-	|STRING	{}
-	|BOOL	{}
-;
-
-return_type:
-	common_type	{}
-	|VOID	{}
+	many_class_decl	EOF	{}
 ;
 
 many_class_decl:
@@ -124,10 +93,21 @@ one_class_decl:
 list_members_decl:
 	attributes_decl	{}
 	|method_prototype	{}
+	|attributes_decl list_members_decl	{}
+	|method_prototype list_members_decl	{}
+;
+
+attributes_decl:
+	many_variables_decl	{}
 ;
 
 method_prototype:
 	return_type ID LPAREN list_params RPAREN SEMICOLON	{}
+;
+
+many_variables_decl:
+	combine_var_decl SEMICOLON	{}
+	|combine_var_decl SEMICOLON many_variables_decl	{}
 ;
 
 list_params:
@@ -136,39 +116,42 @@ list_params:
 	|combine_var_decl SEMICOLON another_param	{}
 ;
 
+combine_var_decl:
+	list_id COLON value_type	{}
+;
+
 another_param:
 	combine_var_decl {}
 	|combine_var_decl SEMICOLON another_param	{}
-;
-
-attributes_decl:
-	many_variables_decl	{}
-;
-
-many_variables_decl:
-	combine_var_decl SEMICOLON	{}
-	|combine_var_decl SEMICOLON many_variables_decl	{}
-;
-
-combine_var_decl:
-	list_id COLON common_type 	{}
 ;
 
 list_id:
 	ID	{}
 	|ID	COMMA list_id	{}
 ;
-/*expr:
-	ID	{}
-	|INT_LIT	{} 
-	|FLOAT_LIT	{}
-	|arithmetic_expr	{}
-	|boolean_expr	{}
-	|relational_expr	{}
-	|string_expr	{}
-	|index_expr	{}
-	|mem_access	{}
-	|obj_creation	{};
-*/
+
+return_type:
+	value_type	{}
+	|VOID	{}
+;
+
+value_type:
+	common_type	{}
+	|array	{}
+;
+
+array:
+	common_type LSQBRA INT_LIT RSQBRA	{}
+;
+
+common_type:
+	INTEGER	{}
+	|FLOAT	{}
+	|STRING	{}
+	|BOOL	{}
+	|ID	{}
+;
+
+
 
 

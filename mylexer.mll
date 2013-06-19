@@ -56,8 +56,6 @@ rule token = parse
 	| "&&"				{LOGIC_AND}
 	| "||"				{LOGIC_OR}
 
-	| "Main"			{MAIN_CLASS}
-	| "main"			{MAIN_METHOD}
 	| "integer"			{INTEGER}
 	| "bool"			{BOOL}
 	| "extends"			{EXTENDS}

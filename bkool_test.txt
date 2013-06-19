@@ -1,8 +1,8 @@
 class Main{
-	a,b,c,d,e: integer;
+	a,b,c,d,e: integer[10];
 	abd: string;
 	void main();
-	integer abc(a:float);
+	affs[0] abc(a:float);
 	dsad,afd:float;
 	
 }
@@ -10,7 +10,7 @@ class Main{
 
 class asdf {
 	fsafsd:integer;
-	float afas(s,a,f,s:integer;)
+	float afas(s,a,f,s:integer;a:float;c:string);
 }
 
 class shape{
