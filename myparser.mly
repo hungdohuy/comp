@@ -10,61 +10,15 @@
 
 %token EOF
 %token <string> ID
-%token LPAREN
-%token RPAREN
-%token LSQBRA
-%token RSQBRA
-%token LCURBRA
-%token RCURBRA
-%token COLON
-%token SEMICOLON
-%token DOUBLECOLON
-%token DOT
-%token COMMA
-%token INTEGER
-%token BOOL
-%token EXTENDS
-%token STRING
-%token BREAK
-%token FLOAT
+%token LPAREN RPAREN LSQBRA RSQBRA LCURBRA RCURBRA COLON SEMICOLON DOUBLECOLON DOT COMMA
+%token INTEGER BOOL EXTENDS STRING FLOAT
 %token <string> STRING_LIT
 %token <float> FLOAT_LIT
 %token <int> INT_LIT
 %token <bool> BOOL_LIT 
-%token THEN
-%token VOID
-%token CLASS
-%token FOR
-%token TO
-%token NULL
-%token CONTINUE
-%token IF
-%token UNTIL
-%token SELF
-%token DO
-%token WHILE
-%token DOWNTO
-%token NEW
-%token RETURN
-%token ELSE
-%token REPEAT
-%token ADD
-%token MUL
-%token INT_DIV
-%token ASSIGN
-%token LESS
-%token LESS_EQUAL
-%token NEQUAL
-%token LOGIC_NOT
-%token CONCAT
-%token SUB
-%token FLOAT_DIV
-%token MOD
-%token EQUAL
-%token GREATER
-%token GREATER_EQUAL
-%token LOGIC_AND
-%token LOGIC_OR
+%token BREAK THEN VOID CLASS FOR TO NULL CONTINUE IF UNTIL SELF DO WHILE DOWNTO NEW RETURN ELSE REPEAT
+%token ADD SUB MUL INT_DIV FLOAT_DIV ASSIGN ASSIGN_CONST
+%token LESS LESS_EQUAL NEQUAL LOGIC_NOT CONCAT MOD EQUAL GREATER GREATER_EQUAL LOGIC_AND LOGIC_OR
 
 
 
@@ -99,15 +53,32 @@ list_members_decl:
 
 attributes_decl:
 	many_variables_decl	{}
+	|many_constant_decl	{}
 ;
 
 method_prototype:
-	return_type ID LPAREN list_params RPAREN SEMICOLON	{}
+	common_type ID LPAREN list_params RPAREN SEMICOLON	{}
 ;
 
 many_variables_decl:
 	combine_var_decl SEMICOLON	{}
 	|combine_var_decl SEMICOLON many_variables_decl	{}
+;
+
+many_constant_decl:
+	one_constant_decl	{}
+	|one_constant_decl many_constant_decl {}
+;
+
+one_constant_decl:
+	ID ASSIGN_CONST expr SEMICOLON	{}
+;
+
+expr:
+	ID	{}
+	|INT_LIT	{}
+	|FLOAT_LIT	{}
+	|STRING_LIT	{}
 ;
 
 list_params:
@@ -117,7 +88,7 @@ list_params:
 ;
 
 combine_var_decl:
-	list_id COLON value_type	{}
+	list_id COLON common_type	{}
 ;
 
 another_param:
@@ -130,16 +101,6 @@ list_id:
 	|ID	COMMA list_id	{}
 ;
 
-return_type:
-	value_type	{}
-	|VOID	{}
-;
-
-value_type:
-	common_type	{}
-	|array	{}
-;
-
 array:
 	common_type LSQBRA INT_LIT RSQBRA	{}
 ;
@@ -150,8 +111,7 @@ common_type:
 	|STRING	{}
 	|BOOL	{}
 	|ID	{}
+	|VOID	{}
+	|array	{}
 ;
-
-
-
 
