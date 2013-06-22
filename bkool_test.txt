@@ -1,8 +1,12 @@
+class Shape {
+void scale(s:integer);
+}
 class Main{
 	a,b,c,d,e: integer[10];
 	abd: string;
 	void main();
-	affs[0] abc(a:float);
+	f =a[5];
+	integer[5] abc(a:float);
 	dsad,afd:float;
 	
 }

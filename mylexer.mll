@@ -50,8 +50,8 @@ rule token = parse
 	| '-'				{SUB}
 	| '/'				{FLOAT_DIV}
 	| '%'				{MOD}
-	| '='				{ASSIGN_CONST}
 	| "=="				{EQUAL}
+	| '='				{ASSIGN_CONST}
 	| '>'				{GREATER}
 	| ">="				{GREATER_EQUAL}
 	| "&&"				{LOGIC_AND}

@@ -32,12 +32,12 @@
 /* Rule definitions */
 
 program:
-	many_class_decl	EOF	{}
+	many_classes_decl	EOF	{}
 ;
 
-many_class_decl:
+many_classes_decl:
 	one_class_decl {}
-	|one_class_decl many_class_decl	{}
+	|one_class_decl many_classes_decl	{}
 ;
 
 one_class_decl:
@@ -45,35 +45,40 @@ one_class_decl:
 ;
 
 list_members_decl:
-	attributes_decl	{}
-	|method_prototype	{}
-	|attributes_decl list_members_decl	{}
-	|method_prototype list_members_decl	{}
+	{}
+	|member_decl list_members_decl	{}
+;
+
+member_decl:
+	|attributes_decl	{}
+	|methods_prototype	{}
 ;
 
 attributes_decl:
-	many_variables_decl	{}
-	|many_constant_decl	{}
+	variables_decl	{}
+	|constants_decl	{}
 ;
 
-method_prototype:
-	common_type ID LPAREN list_params RPAREN SEMICOLON	{}
+methods_prototype:
+	one_method	{}
+	|constructor	{}
 ;
 
-many_variables_decl:
-	combine_var_decl SEMICOLON	{}
-	|combine_var_decl SEMICOLON many_variables_decl	{}
+variables_decl:
+	list_id COLON value_type SEMICOLON	{}
 ;
 
-many_constant_decl:
-	one_constant_decl	{}
-	|one_constant_decl many_constant_decl {}
-;
-
-one_constant_decl:
+constants_decl:
 	ID ASSIGN_CONST expr SEMICOLON	{}
 ;
 
+one_method:
+	return_type ID LPAREN list_params RPAREN SEMICOLON	{}
+;
+
+constructor:
+	ID LPAREN list_params RPAREN SEMICOLON	{}
+;
 expr:
 	ID	{}
 	|INT_LIT	{}
@@ -88,7 +93,7 @@ list_params:
 ;
 
 combine_var_decl:
-	list_id COLON common_type	{}
+	list_id COLON value_type	{}
 ;
 
 another_param:
@@ -101,17 +106,35 @@ list_id:
 	|ID	COMMA list_id	{}
 ;
 
-array:
-	common_type LSQBRA INT_LIT RSQBRA	{}
+return_type:
+	value_type	{}
+	|VOID	{}
 ;
 
-common_type:
+value_type:
+	classtype	{}
+	|primitive	{}
+	|array	{}
+;
+
+classtype:
+	ID	{}
+;
+
+primitive:
 	INTEGER	{}
 	|FLOAT	{}
 	|STRING	{}
 	|BOOL	{}
-	|ID	{}
-	|VOID	{}
-	|array	{}
 ;
+
+array:
+	element_type LSQBRA INT_LIT RSQBRA	{}
+;
+
+element_type:	
+	primitive	{}
+	|classtype	{}
+;
+
 
