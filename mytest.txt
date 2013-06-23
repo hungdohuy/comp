@@ -142,7 +142,7 @@ void Main::main() {
 	io.writeIntLn(self.factorial(x));
 	io.writeIntLn();#a[1].read(1);a[1].write(1);
 	for x := 5 downto 2 do{
-		io.writeIntLn();
+		io.writeIntLn(x);
 		x.writeIntLn(x);x.writeIntLn(x,x);self.writeIntLn();self.writeIntLn(1);
 
 	}

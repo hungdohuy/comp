@@ -28,9 +28,10 @@
 %left MUL FLOAT_DIV INT_DIV MOD
 %left CONCAT
 
+%nonassoc IF_THEN
+%nonassoc ELSE
 %nonassoc LOGIC_NOT
 %nonassoc UNARY
-%nonassoc ID
 %nonassoc LSQBRA RSQBRA
 
 %left DOT
@@ -116,33 +117,6 @@ method_prototype:
 	|constructor	{}
 ;
 
-statement:
-	block_stmt	{}
-	|assignment_stmt	{}
-;
-
-block_stmt:
-	|LCURBRA RCURBRA	{}
-	|LCURBRA list_statements RCURBRA	{}
-	|LCURBRA list_attributes_decl RCURBRA	{}
-	|LCURBRA bullshit_list RCURBRA	{}	
-;
-
-bullshit_list:
-	|attribute_decl bullshit_list	{}
-	|attribute_decl list_statements {}
-;
-
-assignment_stmt:
-	lhs ASSIGN expr SEMICOLON	{}
-;
-
-lhs:
-	ID {}
-	|SELF DOT ID {}
-	|expr LSQBRA expr RSQBRA  {} 
-;
-
 variables_decl:
 	list_id COLON value_type SEMICOLON	{}
 ;
@@ -164,6 +138,63 @@ constructor:
 	ID LPAREN list_params RPAREN SEMICOLON	{}
 ;
 
+list_expr:
+	expr	{}
+	|expr COMMA list_expr	{}
+;
+
+/*Statement declaration*/
+statement:
+	block_stmt	{}
+	|assignment_stmt	{}
+	|if_stmt	{}
+	|WHILE expr DO statement	{}
+	|REPEAT list_statements UNTIL expr SEMICOLON	{}
+	|for_stmt	{}
+	|BREAK SEMICOLON	{}
+	|CONTINUE SEMICOLON {}
+	|RETURN expr SEMICOLON	{}
+	|method_invocation_stmt	{}
+;
+
+block_stmt:
+	|LCURBRA RCURBRA	{}
+	|LCURBRA list_statements RCURBRA	{}
+	|LCURBRA list_attributes_decl RCURBRA	{}
+	|LCURBRA bullshit_list RCURBRA	{}	
+;
+
+bullshit_list:
+	|attribute_decl bullshit_list	{}
+	|attribute_decl list_statements {}
+;
+
+assignment_stmt:
+	lhs ASSIGN expr SEMICOLON	{}
+;
+
+lhs:
+	ID {}
+	|expr DOT ID {}
+	|expr LSQBRA expr RSQBRA  {} 
+;
+
+if_stmt:
+	IF expr THEN statement	%prec IF_THEN	{}
+	|IF expr THEN statement ELSE statement	{}
+;
+
+for_stmt:
+	FOR ID ASSIGN expr TO expr DO statement	{}
+	|FOR ID ASSIGN expr DOWNTO expr DO statement	{}
+;
+
+method_invocation_stmt:
+	expr DOT ID LPAREN list_expr RPAREN SEMICOLON	{}
+	|expr DOT ID LPAREN RPAREN SEMICOLON	{}
+;
+
+/*Expression declaration*/
 
 expr:
 	ID	{}
@@ -171,7 +202,18 @@ expr:
 	|FLOAT_LIT	{}
 	|BOOL_LIT	{}
 	|STRING_LIT	{}
+	|SELF	{}
 	|LPAREN expr RPAREN	{}
+	|arithmetic_expr	{}
+	|boolean_expr	{}
+	|relational_expr	{}
+	|expr CONCAT expr	{}
+	|expr LSQBRA expr RSQBRA	{}
+	|member_access	{}
+	|object_creation	{}
+;
+
+arithmetic_expr:
 	|ADD expr %prec UNARY	{}
 	|SUB expr %prec UNARY	{}
 	|expr ADD expr	{}
@@ -180,30 +222,34 @@ expr:
 	|expr INT_DIV expr	{}
 	|expr FLOAT_DIV expr	{}
 	|expr MOD expr	{}
+;
+
+boolean_expr:
 	|expr LOGIC_AND expr	{}
 	|expr LOGIC_OR	expr	{}
 	|LOGIC_NOT expr	{}
+;
+
+relational_expr:
 	|expr EQUAL expr	{}
 	|expr NEQUAL expr	{}
 	|expr GREATER expr	{}
 	|expr LESS expr	{}
 	|expr GREATER_EQUAL expr	{}
 	|expr LESS_EQUAL expr	{}
-	|expr CONCAT expr	{}
-	|expr LSQBRA expr RSQBRA	{}
-	|SELF DOT ID {}
-	|SELF DOT ID LPAREN RPAREN	{}
-	|SELF DOT ID LPAREN list_expr RPAREN	{}
+;
+
+member_access:
+	|expr DOT ID	{}
 	|expr DOT ID LPAREN RPAREN	{}
 	|expr DOT ID LPAREN	list_expr RPAREN	{}
+;
+
+object_creation:
 	|NEW ID LPAREN RPAREN	{}
 	|NEW ID LPAREN list_expr RPAREN	{}
 ;
-
-list_expr:
-	expr	{}
-	|expr COMMA list_expr	{}
-;
+/*Type definition*/
 
 return_type:
 	value_type	{}
