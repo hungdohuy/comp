@@ -2,6 +2,7 @@ class Shape {
 void scale(s:integer);
 }
 class Main{
+	a=-5;
 	a,b,c,d,e: integer[10];
 	abd: string;
 	void main();
@@ -31,4 +32,14 @@ class B extends A {
 NameOfClass::Contructor(){
 	fsafsd:integer;
 
+}
+
+integer Main::factorial(n:integer; a,c,b:B){
+	length:integer;	
+	length:string;
+	length:bool;
+	myArrayVar:int[5];
+	my2ndVar, my3rdVar:Shape;
+	my2ndArray, my3rdArray: Shape[6];
+	a:=1;
 }

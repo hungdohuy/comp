@@ -17,8 +17,8 @@
 %token <int> INT_LIT
 %token <bool> BOOL_LIT 
 %token BREAK THEN VOID CLASS FOR TO NULL CONTINUE IF UNTIL SELF DO WHILE DOWNTO NEW RETURN ELSE REPEAT
-%token ADD SUB MUL INT_DIV FLOAT_DIV ASSIGN ASSIGN_CONST
-%token LESS LESS_EQUAL NEQUAL LOGIC_NOT CONCAT MOD EQUAL GREATER GREATER_EQUAL LOGIC_AND LOGIC_OR
+%token ADD SUB MUL INT_DIV FLOAT_DIV MOD ASSIGN ASSIGN_CONST
+%token LESS LESS_EQUAL NEQUAL LOGIC_NOT CONCAT  EQUAL GREATER GREATER_EQUAL LOGIC_AND LOGIC_OR
 
 %nonassoc LESS GREATER LESS_EQUAL GREATER_EQUAL
 %nonassoc EQUAL NEQUAL
@@ -30,12 +30,12 @@
 
 %nonassoc LOGIC_NOT
 %nonassoc UNARY
+%nonassoc ID
 %nonassoc LSQBRA RSQBRA
 
 %left DOT
 
 %nonassoc NEW
-
 
 
 
@@ -67,8 +67,8 @@ one_class_decl:
 ;
 
 one_method_decl:
-	return_type ID DOUBLECOLON ID LPAREN list_params RPAREN LCURBRA body RCURBRA	{}
-	|ID DOUBLECOLON ID LPAREN list_params RPAREN LCURBRA body RCURBRA	{}
+	return_type ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt	{}
+	|ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt	{}
 ;
 
 list_members_decl:
@@ -82,12 +82,6 @@ list_params:
 	|combine_var_decl SEMICOLON another_param	{}
 ;
 
-body:
-	{}
-	|list_attributes_decl	{}
-	|list_statements	{}
-	|list_attributes_decl list_statements	{}
-;
 member_decl:
 	|attribute_decl	{}
 	|method_prototype	{}
@@ -108,7 +102,7 @@ list_attributes_decl:
 ;
 
 list_statements:
-	statement	{}
+	|statement	{}
 	|statement list_statements	{}
 ;
 
@@ -123,7 +117,30 @@ method_prototype:
 ;
 
 statement:
-	NEW	{}
+	block_stmt	{}
+	|assignment_stmt	{}
+;
+
+block_stmt:
+	|LCURBRA RCURBRA	{}
+	|LCURBRA list_statements RCURBRA	{}
+	|LCURBRA list_attributes_decl RCURBRA	{}
+	|LCURBRA bullshit_list RCURBRA	{}	
+;
+
+bullshit_list:
+	|attribute_decl bullshit_list	{}
+	|attribute_decl list_statements {}
+;
+
+assignment_stmt:
+	lhs ASSIGN expr SEMICOLON	{}
+;
+
+lhs:
+	ID {}
+	|SELF DOT ID {}
+	|expr LSQBRA expr RSQBRA  {} 
 ;
 
 variables_decl:
@@ -152,10 +169,41 @@ expr:
 	ID	{}
 	|INT_LIT	{}
 	|FLOAT_LIT	{}
-	|STRING_LIT	{}
 	|BOOL_LIT	{}
+	|STRING_LIT	{}
+	|LPAREN expr RPAREN	{}
+	|ADD expr %prec UNARY	{}
+	|SUB expr %prec UNARY	{}
+	|expr ADD expr	{}
+	|expr SUB expr	{}
+	|expr MUL expr	{}
+	|expr INT_DIV expr	{}
+	|expr FLOAT_DIV expr	{}
+	|expr MOD expr	{}
+	|expr LOGIC_AND expr	{}
+	|expr LOGIC_OR	expr	{}
+	|LOGIC_NOT expr	{}
+	|expr EQUAL expr	{}
+	|expr NEQUAL expr	{}
+	|expr GREATER expr	{}
+	|expr LESS expr	{}
+	|expr GREATER_EQUAL expr	{}
+	|expr LESS_EQUAL expr	{}
+	|expr CONCAT expr	{}
+	|expr LSQBRA expr RSQBRA	{}
+	|SELF DOT ID {}
+	|SELF DOT ID LPAREN RPAREN	{}
+	|SELF DOT ID LPAREN list_expr RPAREN	{}
+	|expr DOT ID LPAREN RPAREN	{}
+	|expr DOT ID LPAREN	list_expr RPAREN	{}
+	|NEW ID LPAREN RPAREN	{}
+	|NEW ID LPAREN list_expr RPAREN	{}
 ;
 
+list_expr:
+	expr	{}
+	|expr COMMA list_expr	{}
+;
 
 return_type:
 	value_type	{}
@@ -186,7 +234,3 @@ primitive:
 classtype:
 	ID	{}
 ;
-
-
-
-

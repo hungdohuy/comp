@@ -2,7 +2,7 @@ class A{
 }
 class A{
 	length:float;	
-	length:integer;
+	length:integer;	
 	length:string;
 	length:bool;
 }
@@ -12,7 +12,7 @@ class A	{
 	a = 1.; a = 1.5; a = 1e2; a = 1e-2;
 	a = 1 && 1; a = 1 || 1; a = !true;
 	a = true; a = false;
-	a = 1==1; a = 1 <> 1; a = 1>1; a=1<1; a=1>=1; a=1<=1;
+	a = 1==1.2; a = 1 <> 1; a = 1>1; a=1<1; a=1>=1; a=1<=1;
 	a = (1==1); a=""; a="abc";
 	a = 1[1];a=1[3+x.foo()];a=1[3+self.foo(2)];a=1[3+x.foo(2)];a=1[3+x.foo(2,2,3)];
 	a = new a();a = new a(1,2);
@@ -51,7 +51,7 @@ integer Main::factorial(n:integer; a,c,b:B){
 	a = 1.; a = 1.5; a = 1e2; a = 1e-2;
 	a = 1 && 1; a = 1 || 1; a = !true;
 	a = true; a = false;
-	a = 1==1; a = 1 <> 1; a = 1>1; a=1<1; a=1>=1; a=1<=1;
+	a = 1==1; a = a <> 1; a = 1>1; a=1<1; a=1>=1; a=1<=1;
 	a = (1==1); a="abc";
 	a = 1[1];a=1[3+x.foo()];a=1[3+self.foo(2)];a=1[3+x.foo(2)];a=1[3+x.foo(2,2,3)];
 	a = new a();
@@ -89,7 +89,7 @@ void Main::main() {
 	x := io.readInt();
 	aPI := 3.14;
 	value := x.foo(5);
-	l[3] := value * 2;
+	l[3] := value * 2;a[3+x.foo(2)] :=1;a[3+x.foo(2)] :=a[3+x.foo(2)];
 	
 		if a==1 then
 			a:= 1;	
@@ -98,11 +98,11 @@ void Main::main() {
 	{
 	}
 	else
-	{
-	}
+		if(true) then b:=1;
+		
 		
 	if a==1 then
-		if a==1 then{
+		if a[1]==1 then{
 			a:=1;b:=2;}
 		else
 			b:=1;
@@ -138,12 +138,13 @@ void Main::main() {
 		io.writeIntLn();
 	}
 	
-	s := new Rectangle(3,4);
+	s := new Rectangle(3,4);s:=self.factorial(x);
 	io.writeIntLn(self.factorial(x));
 	io.writeIntLn();#a[1].read(1);a[1].write(1);
 	for x := 5 downto 2 do{
 		io.writeIntLn();
-		x.writeIntLn(x);x.writeIntLn(x,x);
+		x.writeIntLn(x);x.writeIntLn(x,x);self.writeIntLn();self.writeIntLn(1);
+
 	}
 }
 void Main::main() {
