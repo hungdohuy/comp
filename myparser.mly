@@ -20,6 +20,7 @@
 %token ADD SUB MUL INT_DIV FLOAT_DIV MOD ASSIGN ASSIGN_CONST
 %token LESS LESS_EQUAL NEQUAL LOGIC_NOT CONCAT  EQUAL GREATER GREATER_EQUAL LOGIC_AND LOGIC_OR
 
+/*Lowest precedence*/
 %nonassoc LESS GREATER LESS_EQUAL GREATER_EQUAL
 %nonassoc EQUAL NEQUAL
 
@@ -37,7 +38,7 @@
 %left DOT
 
 %nonassoc NEW
-
+/*Highest precedence*/
 
 
 /* Start symbol S's declaration (which symbol of the start symbol) */
@@ -58,7 +59,8 @@ many_declarations:
 ;
 
 declaration:
-	one_class_decl	{}
+	attribute_decl	{}
+	|one_class_decl	{}
 	|one_method_decl	{}
 ;
 
@@ -207,8 +209,8 @@ expr:
 	|arithmetic_expr	{}
 	|boolean_expr	{}
 	|relational_expr	{}
-	|expr CONCAT expr	{}
-	|expr LSQBRA expr RSQBRA	{}
+	|expr CONCAT expr	{}	/*String expression*/
+	|expr LSQBRA expr RSQBRA	{}	/*Index expression*/
 	|member_access	{}
 	|object_creation	{}
 ;

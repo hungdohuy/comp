@@ -1,7 +1,11 @@
+a = 1; a = -1; a=+1; 
+	a = 1+1; a= 1-1; a=1*1; a=1/1; a=1\1; a=1%1;  
+	a = 1.; a = 1.5; a = 1e2; a = 1e-2;
+	a = 1 && 1; a = 1 || 1; a = !true;
 class A{
 }
 class A{
-	length:float;	
+	length:float;
 	length:integer;	
 	length:string;
 	length:bool;
@@ -30,6 +34,7 @@ class A	{
 	bool scale(a,b,c:integer; d:float);
 	float getArea();
 	string getVolume(s:string;b:bool;a:int[5]);
+	string getVolume(s:string;b:bool;a:int[5];a:int);
 	 
 }
 
@@ -91,7 +96,7 @@ void Main::main() {
 	value := x.foo(5);
 	l[3] := value * 2;a[3+x.foo(2)] :=1;a[3+x.foo(2)] :=a[3+x.foo(2)];
 	
-		if a==1 then
+		if (a>=1) && (b<=1) then
 			a:= 1;	
 			
 	if a==1 then
@@ -122,7 +127,7 @@ void Main::main() {
 	do a:=1;
 	for i := 1 to 100 do {
 		a:=1;
-		Intarray[i] := i + 1;
+		Intarray[i] := "i + 1";
 		a:=1;
 		break;
 		if (a==b) then a:=1;

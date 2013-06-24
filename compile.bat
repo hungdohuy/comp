@@ -3,7 +3,7 @@ printf "Compiling result:\n"
 ocamlyacc myparser.mly
 ::checking generate parser
 if %errorlevel% NEQ 0 (
-	printf "An error occurs while generating parser. error %errorlevel%!\n"
+	printf "An error occurs while parsing. error %errorlevel%!\n"
 	goto ERROR_BUILD
 	)
 ocamllex mylexer.mll
