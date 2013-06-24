@@ -1,0 +1,4183 @@
+   0  $accept : %entry% $end
+
+   1  program : many_declarations EOF
+
+   2  many_declarations : declaration
+   3                    | declaration many_declarations
+
+   4  declaration : attribute_decl
+   5              | one_class_decl
+   6              | one_method_decl
+
+   7  one_class_decl : CLASS ID LCURBRA list_members_decl RCURBRA
+   8                 | CLASS ID EXTENDS ID LCURBRA list_members_decl RCURBRA
+
+   9  one_method_decl : return_type ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt
+  10                  | ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt
+
+  11  list_members_decl :
+  12                    | member_decl list_members_decl
+
+  13  list_params :
+  14              | combine_var_decl
+  15              | combine_var_decl SEMICOLON another_param
+
+  16  member_decl : attribute_decl
+  17              | method_prototype
+
+  18  combine_var_decl : list_id COLON value_type
+
+  19  another_param : combine_var_decl
+  20                | combine_var_decl SEMICOLON another_param
+
+  21  list_attributes_decl : attribute_decl
+  22                       | attribute_decl list_attributes_decl
+
+  23  list_statements : statement
+  24                  | statement list_statements
+
+  25  attribute_decl : variables_decl
+  26                 | constants_decl
+
+  27  method_prototype : one_method
+  28                   | constructor
+
+  29  variables_decl : list_id COLON value_type SEMICOLON
+
+  30  constants_decl : ID ASSIGN_CONST expr SEMICOLON
+
+  31  list_id : ID
+  32          | ID COMMA list_id
+
+  33  one_method : return_type ID LPAREN list_params RPAREN SEMICOLON
+
+  34  constructor : ID LPAREN list_params RPAREN SEMICOLON
+
+  35  list_expr : expr
+  36            | expr COMMA list_expr
+
+  37  statement : block_stmt
+  38            | assignment_stmt
+  39            | if_stmt
+  40            | WHILE expr DO statement
+  41            | REPEAT list_statements UNTIL expr SEMICOLON
+  42            | for_stmt
+  43            | BREAK SEMICOLON
+  44            | CONTINUE SEMICOLON
+  45            | RETURN expr SEMICOLON
+  46            | method_invocation_stmt
+
+  47  block_stmt : LCURBRA RCURBRA
+  48             | LCURBRA list_statements RCURBRA
+  49             | LCURBRA list_attributes_decl RCURBRA
+  50             | LCURBRA bullshit_list RCURBRA
+
+  51  bullshit_list : attribute_decl bullshit_list
+  52                | attribute_decl list_statements
+
+  53  assignment_stmt : lhs ASSIGN expr SEMICOLON
+
+  54  lhs : ID
+  55      | expr DOT ID
+  56      | expr LSQBRA expr RSQBRA
+
+  57  if_stmt : IF expr THEN statement
+  58          | IF expr THEN statement ELSE statement
+
+  59  for_stmt : FOR ID ASSIGN expr TO expr DO statement
+  60           | FOR ID ASSIGN expr DOWNTO expr DO statement
+
+  61  method_invocation_stmt : expr DOT ID LPAREN list_expr RPAREN SEMICOLON
+  62                         | expr DOT ID LPAREN RPAREN SEMICOLON
+
+  63  expr : ID
+  64       | INT_LIT
+  65       | FLOAT_LIT
+  66       | BOOL_LIT
+  67       | STRING_LIT
+  68       | SELF
+  69       | LPAREN expr RPAREN
+  70       | arithmetic_expr
+  71       | boolean_expr
+  72       | relational_expr
+  73       | expr CONCAT expr
+  74       | expr LSQBRA expr RSQBRA
+  75       | member_access
+  76       | object_creation
+
+  77  arithmetic_expr : ADD expr
+  78                  | SUB expr
+  79                  | expr ADD expr
+  80                  | expr SUB expr
+  81                  | expr MUL expr
+  82                  | expr INT_DIV expr
+  83                  | expr FLOAT_DIV expr
+  84                  | expr MOD expr
+
+  85  boolean_expr : expr LOGIC_AND expr
+  86               | expr LOGIC_OR expr
+  87               | LOGIC_NOT expr
+
+  88  relational_expr : expr EQUAL expr
+  89                  | expr NEQUAL expr
+  90                  | expr GREATER expr
+  91                  | expr LESS expr
+  92                  | expr GREATER_EQUAL expr
+  93                  | expr LESS_EQUAL expr
+
+  94  member_access : expr DOT ID
+  95                | expr DOT ID LPAREN RPAREN
+  96                | expr DOT ID LPAREN list_expr RPAREN
+
+  97  object_creation : NEW ID LPAREN RPAREN
+  98                  | NEW ID LPAREN list_expr RPAREN
+
+  99  return_type : value_type
+ 100              | VOID
+
+ 101  value_type : element_type
+ 102             | array
+
+ 103  array : element_type LSQBRA INT_LIT RSQBRA
+
+ 104  element_type : primitive
+ 105               | classtype
+
+ 106  primitive : INTEGER
+ 107            | FLOAT
+ 108            | STRING
+ 109            | BOOL
+
+ 110  classtype : ID
+
+ 111  %entry% : '\001' program
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . program  (111)
+
+	ID  shift 3
+	INTEGER  shift 4
+	BOOL  shift 5
+	STRING  shift 6
+	FLOAT  shift 7
+	VOID  shift 8
+	CLASS  shift 9
+	.  error
+
+	program  goto 10
+	many_declarations  goto 11
+	declaration  goto 12
+	attribute_decl  goto 13
+	one_class_decl  goto 14
+	one_method_decl  goto 15
+	return_type  goto 16
+	list_id  goto 17
+	value_type  goto 18
+	variables_decl  goto 19
+	constants_decl  goto 20
+	element_type  goto 21
+	array  goto 22
+	primitive  goto 23
+	classtype  goto 24
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	one_method_decl : ID . DOUBLECOLON ID LPAREN list_params RPAREN block_stmt  (10)
+	constants_decl : ID . ASSIGN_CONST expr SEMICOLON  (30)
+	list_id : ID .  (31)
+	list_id : ID . COMMA list_id  (32)
+	classtype : ID .  (110)
+
+	DOUBLECOLON  shift 25
+	COMMA  shift 26
+	ASSIGN_CONST  shift 27
+	ID  reduce 110
+	LSQBRA  reduce 110
+	COLON  reduce 31
+
+
+state 4
+	primitive : INTEGER .  (106)
+
+	.  reduce 106
+
+
+state 5
+	primitive : BOOL .  (109)
+
+	.  reduce 109
+
+
+state 6
+	primitive : STRING .  (108)
+
+	.  reduce 108
+
+
+state 7
+	primitive : FLOAT .  (107)
+
+	.  reduce 107
+
+
+state 8
+	return_type : VOID .  (100)
+
+	.  reduce 100
+
+
+state 9
+	one_class_decl : CLASS . ID LCURBRA list_members_decl RCURBRA  (7)
+	one_class_decl : CLASS . ID EXTENDS ID LCURBRA list_members_decl RCURBRA  (8)
+
+	ID  shift 28
+	.  error
+
+
+state 10
+	%entry% : '\001' program .  (111)
+
+	.  reduce 111
+
+
+state 11
+	program : many_declarations . EOF  (1)
+
+	EOF  shift 29
+	.  error
+
+
+state 12
+	many_declarations : declaration .  (2)
+	many_declarations : declaration . many_declarations  (3)
+
+	ID  shift 3
+	INTEGER  shift 4
+	BOOL  shift 5
+	STRING  shift 6
+	FLOAT  shift 7
+	VOID  shift 8
+	CLASS  shift 9
+	EOF  reduce 2
+
+	many_declarations  goto 30
+	declaration  goto 12
+	attribute_decl  goto 13
+	one_class_decl  goto 14
+	one_method_decl  goto 15
+	return_type  goto 16
+	list_id  goto 17
+	value_type  goto 18
+	variables_decl  goto 19
+	constants_decl  goto 20
+	element_type  goto 21
+	array  goto 22
+	primitive  goto 23
+	classtype  goto 24
+
+
+state 13
+	declaration : attribute_decl .  (4)
+
+	.  reduce 4
+
+
+state 14
+	declaration : one_class_decl .  (5)
+
+	.  reduce 5
+
+
+state 15
+	declaration : one_method_decl .  (6)
+
+	.  reduce 6
+
+
+state 16
+	one_method_decl : return_type . ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt  (9)
+
+	ID  shift 31
+	.  error
+
+
+state 17
+	variables_decl : list_id . COLON value_type SEMICOLON  (29)
+
+	COLON  shift 32
+	.  error
+
+
+state 18
+	return_type : value_type .  (99)
+
+	.  reduce 99
+
+
+state 19
+	attribute_decl : variables_decl .  (25)
+
+	.  reduce 25
+
+
+state 20
+	attribute_decl : constants_decl .  (26)
+
+	.  reduce 26
+
+
+state 21
+	value_type : element_type .  (101)
+	array : element_type . LSQBRA INT_LIT RSQBRA  (103)
+
+	LSQBRA  shift 33
+	ID  reduce 101
+	RPAREN  reduce 101
+	SEMICOLON  reduce 101
+
+
+state 22
+	value_type : array .  (102)
+
+	.  reduce 102
+
+
+state 23
+	element_type : primitive .  (104)
+
+	.  reduce 104
+
+
+state 24
+	element_type : classtype .  (105)
+
+	.  reduce 105
+
+
+state 25
+	one_method_decl : ID DOUBLECOLON . ID LPAREN list_params RPAREN block_stmt  (10)
+
+	ID  shift 34
+	.  error
+
+
+state 26
+	list_id : ID COMMA . list_id  (32)
+
+	ID  shift 35
+	.  error
+
+	list_id  goto 36
+
+
+state 27
+	constants_decl : ID ASSIGN_CONST . expr SEMICOLON  (30)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 48
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 28
+	one_class_decl : CLASS ID . LCURBRA list_members_decl RCURBRA  (7)
+	one_class_decl : CLASS ID . EXTENDS ID LCURBRA list_members_decl RCURBRA  (8)
+
+	LCURBRA  shift 54
+	EXTENDS  shift 55
+	.  error
+
+
+state 29
+	program : many_declarations EOF .  (1)
+
+	.  reduce 1
+
+
+state 30
+	many_declarations : declaration many_declarations .  (3)
+
+	.  reduce 3
+
+
+state 31
+	one_method_decl : return_type ID . DOUBLECOLON ID LPAREN list_params RPAREN block_stmt  (9)
+
+	DOUBLECOLON  shift 56
+	.  error
+
+
+state 32
+	variables_decl : list_id COLON . value_type SEMICOLON  (29)
+
+	ID  shift 57
+	INTEGER  shift 4
+	BOOL  shift 5
+	STRING  shift 6
+	FLOAT  shift 7
+	.  error
+
+	value_type  goto 58
+	element_type  goto 21
+	array  goto 22
+	primitive  goto 23
+	classtype  goto 24
+
+
+state 33
+	array : element_type LSQBRA . INT_LIT RSQBRA  (103)
+
+	INT_LIT  shift 59
+	.  error
+
+
+state 34
+	one_method_decl : ID DOUBLECOLON ID . LPAREN list_params RPAREN block_stmt  (10)
+
+	LPAREN  shift 60
+	.  error
+
+
+state 35
+	list_id : ID .  (31)
+	list_id : ID . COMMA list_id  (32)
+
+	COMMA  shift 26
+	COLON  reduce 31
+
+
+state 36
+	list_id : ID COMMA list_id .  (32)
+
+	.  reduce 32
+
+
+state 37
+	expr : ID .  (63)
+
+	.  reduce 63
+
+
+state 38
+	expr : LPAREN . expr RPAREN  (69)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 61
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 39
+	expr : STRING_LIT .  (67)
+
+	.  reduce 67
+
+
+state 40
+	expr : FLOAT_LIT .  (65)
+
+	.  reduce 65
+
+
+state 41
+	expr : INT_LIT .  (64)
+
+	.  reduce 64
+
+
+state 42
+	expr : BOOL_LIT .  (66)
+
+	.  reduce 66
+
+
+state 43
+	expr : SELF .  (68)
+
+	.  reduce 68
+
+
+state 44
+	object_creation : NEW . ID LPAREN RPAREN  (97)
+	object_creation : NEW . ID LPAREN list_expr RPAREN  (98)
+
+	ID  shift 62
+	.  error
+
+
+state 45
+	arithmetic_expr : ADD . expr  (77)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 63
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 46
+	arithmetic_expr : SUB . expr  (78)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 64
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 47
+	boolean_expr : LOGIC_NOT . expr  (87)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 65
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 48
+	constants_decl : ID ASSIGN_CONST expr . SEMICOLON  (30)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	SEMICOLON  shift 67
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 49
+	expr : arithmetic_expr .  (70)
+
+	.  reduce 70
+
+
+state 50
+	expr : boolean_expr .  (71)
+
+	.  reduce 71
+
+
+state 51
+	expr : relational_expr .  (72)
+
+	.  reduce 72
+
+
+state 52
+	expr : member_access .  (75)
+
+	.  reduce 75
+
+
+state 53
+	expr : object_creation .  (76)
+
+	.  reduce 76
+
+
+state 54
+	one_class_decl : CLASS ID LCURBRA . list_members_decl RCURBRA  (7)
+	list_members_decl : .  (11)
+
+	ID  shift 84
+	INTEGER  shift 4
+	BOOL  shift 5
+	STRING  shift 6
+	FLOAT  shift 7
+	VOID  shift 8
+	RCURBRA  reduce 11
+
+	attribute_decl  goto 85
+	list_members_decl  goto 86
+	return_type  goto 87
+	member_decl  goto 88
+	method_prototype  goto 89
+	list_id  goto 17
+	value_type  goto 18
+	variables_decl  goto 19
+	constants_decl  goto 20
+	one_method  goto 90
+	constructor  goto 91
+	element_type  goto 21
+	array  goto 22
+	primitive  goto 23
+	classtype  goto 24
+
+
+state 55
+	one_class_decl : CLASS ID EXTENDS . ID LCURBRA list_members_decl RCURBRA  (8)
+
+	ID  shift 92
+	.  error
+
+
+state 56
+	one_method_decl : return_type ID DOUBLECOLON . ID LPAREN list_params RPAREN block_stmt  (9)
+
+	ID  shift 93
+	.  error
+
+
+state 57
+	classtype : ID .  (110)
+
+	.  reduce 110
+
+
+state 58
+	variables_decl : list_id COLON value_type . SEMICOLON  (29)
+
+	SEMICOLON  shift 94
+	.  error
+
+
+state 59
+	array : element_type LSQBRA INT_LIT . RSQBRA  (103)
+
+	RSQBRA  shift 95
+	.  error
+
+
+state 60
+	one_method_decl : ID DOUBLECOLON ID LPAREN . list_params RPAREN block_stmt  (10)
+	list_params : .  (13)
+
+	ID  shift 35
+	RPAREN  reduce 13
+
+	list_params  goto 96
+	combine_var_decl  goto 97
+	list_id  goto 98
+
+
+state 61
+	expr : LPAREN expr . RPAREN  (69)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	RPAREN  shift 99
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 62
+	object_creation : NEW ID . LPAREN RPAREN  (97)
+	object_creation : NEW ID . LPAREN list_expr RPAREN  (98)
+
+	LPAREN  shift 100
+	.  error
+
+
+state 63
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : ADD expr .  (77)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	RPAREN  reduce 77
+	RSQBRA  reduce 77
+	SEMICOLON  reduce 77
+	COMMA  reduce 77
+	THEN  reduce 77
+	TO  reduce 77
+	DO  reduce 77
+	DOWNTO  reduce 77
+	ADD  reduce 77
+	SUB  reduce 77
+	MUL  reduce 77
+	INT_DIV  reduce 77
+	FLOAT_DIV  reduce 77
+	MOD  reduce 77
+	LESS  reduce 77
+	LESS_EQUAL  reduce 77
+	NEQUAL  reduce 77
+	CONCAT  reduce 77
+	EQUAL  reduce 77
+	GREATER  reduce 77
+	GREATER_EQUAL  reduce 77
+	LOGIC_AND  reduce 77
+	LOGIC_OR  reduce 77
+
+
+state 64
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : SUB expr .  (78)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	RPAREN  reduce 78
+	RSQBRA  reduce 78
+	SEMICOLON  reduce 78
+	COMMA  reduce 78
+	THEN  reduce 78
+	TO  reduce 78
+	DO  reduce 78
+	DOWNTO  reduce 78
+	ADD  reduce 78
+	SUB  reduce 78
+	MUL  reduce 78
+	INT_DIV  reduce 78
+	FLOAT_DIV  reduce 78
+	MOD  reduce 78
+	LESS  reduce 78
+	LESS_EQUAL  reduce 78
+	NEQUAL  reduce 78
+	CONCAT  reduce 78
+	EQUAL  reduce 78
+	GREATER  reduce 78
+	GREATER_EQUAL  reduce 78
+	LOGIC_AND  reduce 78
+	LOGIC_OR  reduce 78
+
+
+state 65
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	boolean_expr : LOGIC_NOT expr .  (87)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	RPAREN  reduce 87
+	RSQBRA  reduce 87
+	SEMICOLON  reduce 87
+	COMMA  reduce 87
+	THEN  reduce 87
+	TO  reduce 87
+	DO  reduce 87
+	DOWNTO  reduce 87
+	ADD  reduce 87
+	SUB  reduce 87
+	MUL  reduce 87
+	INT_DIV  reduce 87
+	FLOAT_DIV  reduce 87
+	MOD  reduce 87
+	LESS  reduce 87
+	LESS_EQUAL  reduce 87
+	NEQUAL  reduce 87
+	CONCAT  reduce 87
+	EQUAL  reduce 87
+	GREATER  reduce 87
+	GREATER_EQUAL  reduce 87
+	LOGIC_AND  reduce 87
+	LOGIC_OR  reduce 87
+
+
+state 66
+	expr : expr LSQBRA . expr RSQBRA  (74)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 101
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 67
+	constants_decl : ID ASSIGN_CONST expr SEMICOLON .  (30)
+
+	.  reduce 30
+
+
+state 68
+	member_access : expr DOT . ID  (94)
+	member_access : expr DOT . ID LPAREN RPAREN  (95)
+	member_access : expr DOT . ID LPAREN list_expr RPAREN  (96)
+
+	ID  shift 102
+	.  error
+
+
+state 69
+	arithmetic_expr : expr ADD . expr  (79)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 103
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 70
+	arithmetic_expr : expr SUB . expr  (80)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 104
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 71
+	arithmetic_expr : expr MUL . expr  (81)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 105
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 72
+	arithmetic_expr : expr INT_DIV . expr  (82)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 106
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 73
+	arithmetic_expr : expr FLOAT_DIV . expr  (83)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 107
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 74
+	arithmetic_expr : expr MOD . expr  (84)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 108
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 75
+	relational_expr : expr LESS . expr  (91)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 109
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 76
+	relational_expr : expr LESS_EQUAL . expr  (93)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 110
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 77
+	relational_expr : expr NEQUAL . expr  (89)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 111
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 78
+	expr : expr CONCAT . expr  (73)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 112
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 79
+	relational_expr : expr EQUAL . expr  (88)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 113
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 80
+	relational_expr : expr GREATER . expr  (90)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 114
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 81
+	relational_expr : expr GREATER_EQUAL . expr  (92)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 115
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 82
+	boolean_expr : expr LOGIC_AND . expr  (85)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 116
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 83
+	boolean_expr : expr LOGIC_OR . expr  (86)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 117
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 84
+	constants_decl : ID . ASSIGN_CONST expr SEMICOLON  (30)
+	list_id : ID .  (31)
+	list_id : ID . COMMA list_id  (32)
+	constructor : ID . LPAREN list_params RPAREN SEMICOLON  (34)
+	classtype : ID .  (110)
+
+	LPAREN  shift 118
+	COMMA  shift 26
+	ASSIGN_CONST  shift 27
+	ID  reduce 110
+	LSQBRA  reduce 110
+	COLON  reduce 31
+
+
+state 85
+	member_decl : attribute_decl .  (16)
+
+	.  reduce 16
+
+
+state 86
+	one_class_decl : CLASS ID LCURBRA list_members_decl . RCURBRA  (7)
+
+	RCURBRA  shift 119
+	.  error
+
+
+state 87
+	one_method : return_type . ID LPAREN list_params RPAREN SEMICOLON  (33)
+
+	ID  shift 120
+	.  error
+
+
+state 88
+	list_members_decl : member_decl . list_members_decl  (12)
+	list_members_decl : .  (11)
+
+	ID  shift 84
+	INTEGER  shift 4
+	BOOL  shift 5
+	STRING  shift 6
+	FLOAT  shift 7
+	VOID  shift 8
+	RCURBRA  reduce 11
+
+	attribute_decl  goto 85
+	list_members_decl  goto 121
+	return_type  goto 87
+	member_decl  goto 88
+	method_prototype  goto 89
+	list_id  goto 17
+	value_type  goto 18
+	variables_decl  goto 19
+	constants_decl  goto 20
+	one_method  goto 90
+	constructor  goto 91
+	element_type  goto 21
+	array  goto 22
+	primitive  goto 23
+	classtype  goto 24
+
+
+state 89
+	member_decl : method_prototype .  (17)
+
+	.  reduce 17
+
+
+state 90
+	method_prototype : one_method .  (27)
+
+	.  reduce 27
+
+
+state 91
+	method_prototype : constructor .  (28)
+
+	.  reduce 28
+
+
+state 92
+	one_class_decl : CLASS ID EXTENDS ID . LCURBRA list_members_decl RCURBRA  (8)
+
+	LCURBRA  shift 122
+	.  error
+
+
+state 93
+	one_method_decl : return_type ID DOUBLECOLON ID . LPAREN list_params RPAREN block_stmt  (9)
+
+	LPAREN  shift 123
+	.  error
+
+
+state 94
+	variables_decl : list_id COLON value_type SEMICOLON .  (29)
+
+	.  reduce 29
+
+
+state 95
+	array : element_type LSQBRA INT_LIT RSQBRA .  (103)
+
+	.  reduce 103
+
+
+state 96
+	one_method_decl : ID DOUBLECOLON ID LPAREN list_params . RPAREN block_stmt  (10)
+
+	RPAREN  shift 124
+	.  error
+
+
+state 97
+	list_params : combine_var_decl .  (14)
+	list_params : combine_var_decl . SEMICOLON another_param  (15)
+
+	SEMICOLON  shift 125
+	RPAREN  reduce 14
+
+
+state 98
+	combine_var_decl : list_id . COLON value_type  (18)
+
+	COLON  shift 126
+	.  error
+
+
+state 99
+	expr : LPAREN expr RPAREN .  (69)
+
+	.  reduce 69
+
+
+state 100
+	object_creation : NEW ID LPAREN . RPAREN  (97)
+	object_creation : NEW ID LPAREN . list_expr RPAREN  (98)
+
+	ID  shift 37
+	LPAREN  shift 38
+	RPAREN  shift 127
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 128
+	list_expr  goto 129
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 101
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	expr : expr LSQBRA expr . RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	RSQBRA  shift 130
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 102
+	member_access : expr DOT ID .  (94)
+	member_access : expr DOT ID . LPAREN RPAREN  (95)
+	member_access : expr DOT ID . LPAREN list_expr RPAREN  (96)
+
+	LPAREN  shift 131
+	RPAREN  reduce 94
+	LSQBRA  reduce 94
+	RSQBRA  reduce 94
+	SEMICOLON  reduce 94
+	DOT  reduce 94
+	COMMA  reduce 94
+	THEN  reduce 94
+	TO  reduce 94
+	DO  reduce 94
+	DOWNTO  reduce 94
+	ADD  reduce 94
+	SUB  reduce 94
+	MUL  reduce 94
+	INT_DIV  reduce 94
+	FLOAT_DIV  reduce 94
+	MOD  reduce 94
+	LESS  reduce 94
+	LESS_EQUAL  reduce 94
+	NEQUAL  reduce 94
+	CONCAT  reduce 94
+	EQUAL  reduce 94
+	GREATER  reduce 94
+	GREATER_EQUAL  reduce 94
+	LOGIC_AND  reduce 94
+	LOGIC_OR  reduce 94
+
+
+state 103
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr ADD expr .  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	CONCAT  shift 78
+	RPAREN  reduce 79
+	RSQBRA  reduce 79
+	SEMICOLON  reduce 79
+	COMMA  reduce 79
+	THEN  reduce 79
+	TO  reduce 79
+	DO  reduce 79
+	DOWNTO  reduce 79
+	ADD  reduce 79
+	SUB  reduce 79
+	LESS  reduce 79
+	LESS_EQUAL  reduce 79
+	NEQUAL  reduce 79
+	EQUAL  reduce 79
+	GREATER  reduce 79
+	GREATER_EQUAL  reduce 79
+	LOGIC_AND  reduce 79
+	LOGIC_OR  reduce 79
+
+
+state 104
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr SUB expr .  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	CONCAT  shift 78
+	RPAREN  reduce 80
+	RSQBRA  reduce 80
+	SEMICOLON  reduce 80
+	COMMA  reduce 80
+	THEN  reduce 80
+	TO  reduce 80
+	DO  reduce 80
+	DOWNTO  reduce 80
+	ADD  reduce 80
+	SUB  reduce 80
+	LESS  reduce 80
+	LESS_EQUAL  reduce 80
+	NEQUAL  reduce 80
+	EQUAL  reduce 80
+	GREATER  reduce 80
+	GREATER_EQUAL  reduce 80
+	LOGIC_AND  reduce 80
+	LOGIC_OR  reduce 80
+
+
+state 105
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr MUL expr .  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	CONCAT  shift 78
+	RPAREN  reduce 81
+	RSQBRA  reduce 81
+	SEMICOLON  reduce 81
+	COMMA  reduce 81
+	THEN  reduce 81
+	TO  reduce 81
+	DO  reduce 81
+	DOWNTO  reduce 81
+	ADD  reduce 81
+	SUB  reduce 81
+	MUL  reduce 81
+	INT_DIV  reduce 81
+	FLOAT_DIV  reduce 81
+	MOD  reduce 81
+	LESS  reduce 81
+	LESS_EQUAL  reduce 81
+	NEQUAL  reduce 81
+	EQUAL  reduce 81
+	GREATER  reduce 81
+	GREATER_EQUAL  reduce 81
+	LOGIC_AND  reduce 81
+	LOGIC_OR  reduce 81
+
+
+state 106
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr INT_DIV expr .  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	CONCAT  shift 78
+	RPAREN  reduce 82
+	RSQBRA  reduce 82
+	SEMICOLON  reduce 82
+	COMMA  reduce 82
+	THEN  reduce 82
+	TO  reduce 82
+	DO  reduce 82
+	DOWNTO  reduce 82
+	ADD  reduce 82
+	SUB  reduce 82
+	MUL  reduce 82
+	INT_DIV  reduce 82
+	FLOAT_DIV  reduce 82
+	MOD  reduce 82
+	LESS  reduce 82
+	LESS_EQUAL  reduce 82
+	NEQUAL  reduce 82
+	EQUAL  reduce 82
+	GREATER  reduce 82
+	GREATER_EQUAL  reduce 82
+	LOGIC_AND  reduce 82
+	LOGIC_OR  reduce 82
+
+
+state 107
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr FLOAT_DIV expr .  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	CONCAT  shift 78
+	RPAREN  reduce 83
+	RSQBRA  reduce 83
+	SEMICOLON  reduce 83
+	COMMA  reduce 83
+	THEN  reduce 83
+	TO  reduce 83
+	DO  reduce 83
+	DOWNTO  reduce 83
+	ADD  reduce 83
+	SUB  reduce 83
+	MUL  reduce 83
+	INT_DIV  reduce 83
+	FLOAT_DIV  reduce 83
+	MOD  reduce 83
+	LESS  reduce 83
+	LESS_EQUAL  reduce 83
+	NEQUAL  reduce 83
+	EQUAL  reduce 83
+	GREATER  reduce 83
+	GREATER_EQUAL  reduce 83
+	LOGIC_AND  reduce 83
+	LOGIC_OR  reduce 83
+
+
+state 108
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	arithmetic_expr : expr MOD expr .  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	CONCAT  shift 78
+	RPAREN  reduce 84
+	RSQBRA  reduce 84
+	SEMICOLON  reduce 84
+	COMMA  reduce 84
+	THEN  reduce 84
+	TO  reduce 84
+	DO  reduce 84
+	DOWNTO  reduce 84
+	ADD  reduce 84
+	SUB  reduce 84
+	MUL  reduce 84
+	INT_DIV  reduce 84
+	FLOAT_DIV  reduce 84
+	MOD  reduce 84
+	LESS  reduce 84
+	LESS_EQUAL  reduce 84
+	NEQUAL  reduce 84
+	EQUAL  reduce 84
+	GREATER  reduce 84
+	GREATER_EQUAL  reduce 84
+	LOGIC_AND  reduce 84
+	LOGIC_OR  reduce 84
+
+
+state 109
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr LESS expr .  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	RPAREN  reduce 91
+	RSQBRA  reduce 91
+	SEMICOLON  reduce 91
+	COMMA  reduce 91
+	THEN  reduce 91
+	TO  reduce 91
+	DO  reduce 91
+	DOWNTO  reduce 91
+
+
+state 110
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	relational_expr : expr LESS_EQUAL expr .  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	RPAREN  reduce 93
+	RSQBRA  reduce 93
+	SEMICOLON  reduce 93
+	COMMA  reduce 93
+	THEN  reduce 93
+	TO  reduce 93
+	DO  reduce 93
+	DOWNTO  reduce 93
+
+
+state 111
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr NEQUAL expr .  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	CONCAT  shift 78
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	RPAREN  reduce 89
+	RSQBRA  reduce 89
+	SEMICOLON  reduce 89
+	COMMA  reduce 89
+	THEN  reduce 89
+	TO  reduce 89
+	DO  reduce 89
+	DOWNTO  reduce 89
+	LESS  reduce 89
+	LESS_EQUAL  reduce 89
+	GREATER  reduce 89
+	GREATER_EQUAL  reduce 89
+
+
+state 112
+	expr : expr . CONCAT expr  (73)
+	expr : expr CONCAT expr .  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	RPAREN  reduce 73
+	RSQBRA  reduce 73
+	SEMICOLON  reduce 73
+	COMMA  reduce 73
+	THEN  reduce 73
+	TO  reduce 73
+	DO  reduce 73
+	DOWNTO  reduce 73
+	ADD  reduce 73
+	SUB  reduce 73
+	MUL  reduce 73
+	INT_DIV  reduce 73
+	FLOAT_DIV  reduce 73
+	MOD  reduce 73
+	LESS  reduce 73
+	LESS_EQUAL  reduce 73
+	NEQUAL  reduce 73
+	CONCAT  reduce 73
+	EQUAL  reduce 73
+	GREATER  reduce 73
+	GREATER_EQUAL  reduce 73
+	LOGIC_AND  reduce 73
+	LOGIC_OR  reduce 73
+
+
+state 113
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr EQUAL expr .  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	CONCAT  shift 78
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	RPAREN  reduce 88
+	RSQBRA  reduce 88
+	SEMICOLON  reduce 88
+	COMMA  reduce 88
+	THEN  reduce 88
+	TO  reduce 88
+	DO  reduce 88
+	DOWNTO  reduce 88
+	LESS  reduce 88
+	LESS_EQUAL  reduce 88
+	GREATER  reduce 88
+	GREATER_EQUAL  reduce 88
+
+
+state 114
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr GREATER expr .  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	RPAREN  reduce 90
+	RSQBRA  reduce 90
+	SEMICOLON  reduce 90
+	COMMA  reduce 90
+	THEN  reduce 90
+	TO  reduce 90
+	DO  reduce 90
+	DOWNTO  reduce 90
+
+
+state 115
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr GREATER_EQUAL expr .  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	RPAREN  reduce 92
+	RSQBRA  reduce 92
+	SEMICOLON  reduce 92
+	COMMA  reduce 92
+	THEN  reduce 92
+	TO  reduce 92
+	DO  reduce 92
+	DOWNTO  reduce 92
+
+
+state 116
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr LOGIC_AND expr .  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	CONCAT  shift 78
+	RPAREN  reduce 85
+	RSQBRA  reduce 85
+	SEMICOLON  reduce 85
+	COMMA  reduce 85
+	THEN  reduce 85
+	TO  reduce 85
+	DO  reduce 85
+	DOWNTO  reduce 85
+	LESS  reduce 85
+	LESS_EQUAL  reduce 85
+	NEQUAL  reduce 85
+	EQUAL  reduce 85
+	GREATER  reduce 85
+	GREATER_EQUAL  reduce 85
+	LOGIC_AND  reduce 85
+	LOGIC_OR  reduce 85
+
+
+state 117
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	boolean_expr : expr LOGIC_OR expr .  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	CONCAT  shift 78
+	RPAREN  reduce 86
+	RSQBRA  reduce 86
+	SEMICOLON  reduce 86
+	COMMA  reduce 86
+	THEN  reduce 86
+	TO  reduce 86
+	DO  reduce 86
+	DOWNTO  reduce 86
+	LESS  reduce 86
+	LESS_EQUAL  reduce 86
+	NEQUAL  reduce 86
+	EQUAL  reduce 86
+	GREATER  reduce 86
+	GREATER_EQUAL  reduce 86
+	LOGIC_AND  reduce 86
+	LOGIC_OR  reduce 86
+
+
+state 118
+	constructor : ID LPAREN . list_params RPAREN SEMICOLON  (34)
+	list_params : .  (13)
+
+	ID  shift 35
+	RPAREN  reduce 13
+
+	list_params  goto 132
+	combine_var_decl  goto 97
+	list_id  goto 98
+
+
+state 119
+	one_class_decl : CLASS ID LCURBRA list_members_decl RCURBRA .  (7)
+
+	.  reduce 7
+
+
+state 120
+	one_method : return_type ID . LPAREN list_params RPAREN SEMICOLON  (33)
+
+	LPAREN  shift 133
+	.  error
+
+
+state 121
+	list_members_decl : member_decl list_members_decl .  (12)
+
+	.  reduce 12
+
+
+state 122
+	one_class_decl : CLASS ID EXTENDS ID LCURBRA . list_members_decl RCURBRA  (8)
+	list_members_decl : .  (11)
+
+	ID  shift 84
+	INTEGER  shift 4
+	BOOL  shift 5
+	STRING  shift 6
+	FLOAT  shift 7
+	VOID  shift 8
+	RCURBRA  reduce 11
+
+	attribute_decl  goto 85
+	list_members_decl  goto 134
+	return_type  goto 87
+	member_decl  goto 88
+	method_prototype  goto 89
+	list_id  goto 17
+	value_type  goto 18
+	variables_decl  goto 19
+	constants_decl  goto 20
+	one_method  goto 90
+	constructor  goto 91
+	element_type  goto 21
+	array  goto 22
+	primitive  goto 23
+	classtype  goto 24
+
+
+state 123
+	one_method_decl : return_type ID DOUBLECOLON ID LPAREN . list_params RPAREN block_stmt  (9)
+	list_params : .  (13)
+
+	ID  shift 35
+	RPAREN  reduce 13
+
+	list_params  goto 135
+	combine_var_decl  goto 97
+	list_id  goto 98
+
+
+state 124
+	one_method_decl : ID DOUBLECOLON ID LPAREN list_params RPAREN . block_stmt  (10)
+
+	LCURBRA  shift 136
+	.  error
+
+	block_stmt  goto 137
+
+
+state 125
+	list_params : combine_var_decl SEMICOLON . another_param  (15)
+
+	ID  shift 35
+	.  error
+
+	combine_var_decl  goto 138
+	another_param  goto 139
+	list_id  goto 98
+
+
+state 126
+	combine_var_decl : list_id COLON . value_type  (18)
+
+	ID  shift 57
+	INTEGER  shift 4
+	BOOL  shift 5
+	STRING  shift 6
+	FLOAT  shift 7
+	.  error
+
+	value_type  goto 140
+	element_type  goto 21
+	array  goto 22
+	primitive  goto 23
+	classtype  goto 24
+
+
+state 127
+	object_creation : NEW ID LPAREN RPAREN .  (97)
+
+	.  reduce 97
+
+
+state 128
+	list_expr : expr .  (35)
+	list_expr : expr . COMMA list_expr  (36)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	COMMA  shift 141
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	RPAREN  reduce 35
+
+
+state 129
+	object_creation : NEW ID LPAREN list_expr . RPAREN  (98)
+
+	RPAREN  shift 142
+	.  error
+
+
+state 130
+	expr : expr LSQBRA expr RSQBRA .  (74)
+
+	.  reduce 74
+
+
+state 131
+	member_access : expr DOT ID LPAREN . RPAREN  (95)
+	member_access : expr DOT ID LPAREN . list_expr RPAREN  (96)
+
+	ID  shift 37
+	LPAREN  shift 38
+	RPAREN  shift 143
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 128
+	list_expr  goto 144
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 132
+	constructor : ID LPAREN list_params . RPAREN SEMICOLON  (34)
+
+	RPAREN  shift 145
+	.  error
+
+
+state 133
+	one_method : return_type ID LPAREN . list_params RPAREN SEMICOLON  (33)
+	list_params : .  (13)
+
+	ID  shift 35
+	RPAREN  reduce 13
+
+	list_params  goto 146
+	combine_var_decl  goto 97
+	list_id  goto 98
+
+
+state 134
+	one_class_decl : CLASS ID EXTENDS ID LCURBRA list_members_decl . RCURBRA  (8)
+
+	RCURBRA  shift 147
+	.  error
+
+
+state 135
+	one_method_decl : return_type ID DOUBLECOLON ID LPAREN list_params . RPAREN block_stmt  (9)
+
+	RPAREN  shift 148
+	.  error
+
+
+state 136
+	block_stmt : LCURBRA . RCURBRA  (47)
+	block_stmt : LCURBRA . list_statements RCURBRA  (48)
+	block_stmt : LCURBRA . list_attributes_decl RCURBRA  (49)
+	block_stmt : LCURBRA . bullshit_list RCURBRA  (50)
+
+	ID  shift 149
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	RCURBRA  shift 150
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	attribute_decl  goto 158
+	block_stmt  goto 159
+	list_id  goto 17
+	list_attributes_decl  goto 160
+	list_statements  goto 161
+	statement  goto 162
+	variables_decl  goto 19
+	constants_decl  goto 20
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	bullshit_list  goto 168
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 137
+	one_method_decl : ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt .  (10)
+
+	.  reduce 10
+
+
+state 138
+	another_param : combine_var_decl .  (19)
+	another_param : combine_var_decl . SEMICOLON another_param  (20)
+
+	SEMICOLON  shift 170
+	RPAREN  reduce 19
+
+
+state 139
+	list_params : combine_var_decl SEMICOLON another_param .  (15)
+
+	.  reduce 15
+
+
+state 140
+	combine_var_decl : list_id COLON value_type .  (18)
+
+	.  reduce 18
+
+
+state 141
+	list_expr : expr COMMA . list_expr  (36)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 128
+	list_expr  goto 171
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 142
+	object_creation : NEW ID LPAREN list_expr RPAREN .  (98)
+
+	.  reduce 98
+
+
+state 143
+	member_access : expr DOT ID LPAREN RPAREN .  (95)
+
+	.  reduce 95
+
+
+state 144
+	member_access : expr DOT ID LPAREN list_expr . RPAREN  (96)
+
+	RPAREN  shift 172
+	.  error
+
+
+state 145
+	constructor : ID LPAREN list_params RPAREN . SEMICOLON  (34)
+
+	SEMICOLON  shift 173
+	.  error
+
+
+state 146
+	one_method : return_type ID LPAREN list_params . RPAREN SEMICOLON  (33)
+
+	RPAREN  shift 174
+	.  error
+
+
+state 147
+	one_class_decl : CLASS ID EXTENDS ID LCURBRA list_members_decl RCURBRA .  (8)
+
+	.  reduce 8
+
+
+state 148
+	one_method_decl : return_type ID DOUBLECOLON ID LPAREN list_params RPAREN . block_stmt  (9)
+
+	LCURBRA  shift 136
+	.  error
+
+	block_stmt  goto 175
+
+
+state 149
+	constants_decl : ID . ASSIGN_CONST expr SEMICOLON  (30)
+	list_id : ID .  (31)
+	list_id : ID . COMMA list_id  (32)
+	lhs : ID .  (54)
+	expr : ID .  (63)
+
+	COMMA  shift 26
+	ASSIGN_CONST  shift 27
+	LSQBRA  reduce 63
+	COLON  reduce 31
+	DOT  reduce 63
+	ADD  reduce 63
+	SUB  reduce 63
+	MUL  reduce 63
+	INT_DIV  reduce 63
+	FLOAT_DIV  reduce 63
+	MOD  reduce 63
+	ASSIGN  reduce 54
+	LESS  reduce 63
+	LESS_EQUAL  reduce 63
+	NEQUAL  reduce 63
+	CONCAT  reduce 63
+	EQUAL  reduce 63
+	GREATER  reduce 63
+	GREATER_EQUAL  reduce 63
+	LOGIC_AND  reduce 63
+	LOGIC_OR  reduce 63
+
+
+state 150
+	block_stmt : LCURBRA RCURBRA .  (47)
+
+	.  reduce 47
+
+
+state 151
+	statement : BREAK . SEMICOLON  (43)
+
+	SEMICOLON  shift 176
+	.  error
+
+
+state 152
+	for_stmt : FOR . ID ASSIGN expr TO expr DO statement  (59)
+	for_stmt : FOR . ID ASSIGN expr DOWNTO expr DO statement  (60)
+
+	ID  shift 177
+	.  error
+
+
+state 153
+	statement : CONTINUE . SEMICOLON  (44)
+
+	SEMICOLON  shift 178
+	.  error
+
+
+state 154
+	if_stmt : IF . expr THEN statement  (57)
+	if_stmt : IF . expr THEN statement ELSE statement  (58)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 179
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 155
+	statement : WHILE . expr DO statement  (40)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 180
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 156
+	statement : RETURN . expr SEMICOLON  (45)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 181
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 157
+	statement : REPEAT . list_statements UNTIL expr SEMICOLON  (41)
+
+	ID  shift 182
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	block_stmt  goto 159
+	list_statements  goto 183
+	statement  goto 162
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 158
+	list_attributes_decl : attribute_decl .  (21)
+	list_attributes_decl : attribute_decl . list_attributes_decl  (22)
+	bullshit_list : attribute_decl . bullshit_list  (51)
+	bullshit_list : attribute_decl . list_statements  (52)
+
+	ID  shift 149
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	RCURBRA  reduce 21
+
+	attribute_decl  goto 158
+	block_stmt  goto 159
+	list_id  goto 17
+	list_attributes_decl  goto 184
+	list_statements  goto 185
+	statement  goto 162
+	variables_decl  goto 19
+	constants_decl  goto 20
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	bullshit_list  goto 186
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 159
+	statement : block_stmt .  (37)
+
+	.  reduce 37
+
+
+state 160
+	block_stmt : LCURBRA list_attributes_decl . RCURBRA  (49)
+
+	RCURBRA  shift 187
+	.  error
+
+
+state 161
+	block_stmt : LCURBRA list_statements . RCURBRA  (48)
+
+	RCURBRA  shift 188
+	.  error
+
+
+state 162
+	list_statements : statement .  (23)
+	list_statements : statement . list_statements  (24)
+
+	ID  shift 182
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	RCURBRA  reduce 23
+	UNTIL  reduce 23
+
+	block_stmt  goto 159
+	list_statements  goto 189
+	statement  goto 162
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 163
+	lhs : expr . DOT ID  (55)
+	lhs : expr . LSQBRA expr RSQBRA  (56)
+	method_invocation_stmt : expr . DOT ID LPAREN list_expr RPAREN SEMICOLON  (61)
+	method_invocation_stmt : expr . DOT ID LPAREN RPAREN SEMICOLON  (62)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 190
+	DOT  shift 191
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 164
+	statement : assignment_stmt .  (38)
+
+	.  reduce 38
+
+
+state 165
+	statement : if_stmt .  (39)
+
+	.  reduce 39
+
+
+state 166
+	statement : for_stmt .  (42)
+
+	.  reduce 42
+
+
+state 167
+	statement : method_invocation_stmt .  (46)
+
+	.  reduce 46
+
+
+state 168
+	block_stmt : LCURBRA bullshit_list . RCURBRA  (50)
+
+	RCURBRA  shift 192
+	.  error
+
+
+state 169
+	assignment_stmt : lhs . ASSIGN expr SEMICOLON  (53)
+
+	ASSIGN  shift 193
+	.  error
+
+
+state 170
+	another_param : combine_var_decl SEMICOLON . another_param  (20)
+
+	ID  shift 35
+	.  error
+
+	combine_var_decl  goto 138
+	another_param  goto 194
+	list_id  goto 98
+
+
+state 171
+	list_expr : expr COMMA list_expr .  (36)
+
+	.  reduce 36
+
+
+state 172
+	member_access : expr DOT ID LPAREN list_expr RPAREN .  (96)
+
+	.  reduce 96
+
+
+state 173
+	constructor : ID LPAREN list_params RPAREN SEMICOLON .  (34)
+
+	.  reduce 34
+
+
+state 174
+	one_method : return_type ID LPAREN list_params RPAREN . SEMICOLON  (33)
+
+	SEMICOLON  shift 195
+	.  error
+
+
+state 175
+	one_method_decl : return_type ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt .  (9)
+
+	.  reduce 9
+
+
+state 176
+	statement : BREAK SEMICOLON .  (43)
+
+	.  reduce 43
+
+
+state 177
+	for_stmt : FOR ID . ASSIGN expr TO expr DO statement  (59)
+	for_stmt : FOR ID . ASSIGN expr DOWNTO expr DO statement  (60)
+
+	ASSIGN  shift 196
+	.  error
+
+
+state 178
+	statement : CONTINUE SEMICOLON .  (44)
+
+	.  reduce 44
+
+
+state 179
+	if_stmt : IF expr . THEN statement  (57)
+	if_stmt : IF expr . THEN statement ELSE statement  (58)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	THEN  shift 197
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 180
+	statement : WHILE expr . DO statement  (40)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	DO  shift 198
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 181
+	statement : RETURN expr . SEMICOLON  (45)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	SEMICOLON  shift 199
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 182
+	lhs : ID .  (54)
+	expr : ID .  (63)
+
+	LSQBRA  reduce 63
+	DOT  reduce 63
+	ADD  reduce 63
+	SUB  reduce 63
+	MUL  reduce 63
+	INT_DIV  reduce 63
+	FLOAT_DIV  reduce 63
+	MOD  reduce 63
+	ASSIGN  reduce 54
+	LESS  reduce 63
+	LESS_EQUAL  reduce 63
+	NEQUAL  reduce 63
+	CONCAT  reduce 63
+	EQUAL  reduce 63
+	GREATER  reduce 63
+	GREATER_EQUAL  reduce 63
+	LOGIC_AND  reduce 63
+	LOGIC_OR  reduce 63
+
+
+state 183
+	statement : REPEAT list_statements . UNTIL expr SEMICOLON  (41)
+
+	UNTIL  shift 200
+	.  error
+
+
+state 184
+	list_attributes_decl : attribute_decl list_attributes_decl .  (22)
+
+	.  reduce 22
+
+
+state 185
+	bullshit_list : attribute_decl list_statements .  (52)
+
+	.  reduce 52
+
+
+state 186
+	bullshit_list : attribute_decl bullshit_list .  (51)
+
+	.  reduce 51
+
+
+state 187
+	block_stmt : LCURBRA list_attributes_decl RCURBRA .  (49)
+
+	.  reduce 49
+
+
+state 188
+	block_stmt : LCURBRA list_statements RCURBRA .  (48)
+
+	.  reduce 48
+
+
+state 189
+	list_statements : statement list_statements .  (24)
+
+	.  reduce 24
+
+
+state 190
+	lhs : expr LSQBRA . expr RSQBRA  (56)
+	expr : expr LSQBRA . expr RSQBRA  (74)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 201
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 191
+	lhs : expr DOT . ID  (55)
+	method_invocation_stmt : expr DOT . ID LPAREN list_expr RPAREN SEMICOLON  (61)
+	method_invocation_stmt : expr DOT . ID LPAREN RPAREN SEMICOLON  (62)
+	member_access : expr DOT . ID  (94)
+	member_access : expr DOT . ID LPAREN RPAREN  (95)
+	member_access : expr DOT . ID LPAREN list_expr RPAREN  (96)
+
+	ID  shift 202
+	.  error
+
+
+state 192
+	block_stmt : LCURBRA bullshit_list RCURBRA .  (50)
+
+	.  reduce 50
+
+
+state 193
+	assignment_stmt : lhs ASSIGN . expr SEMICOLON  (53)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 203
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 194
+	another_param : combine_var_decl SEMICOLON another_param .  (20)
+
+	.  reduce 20
+
+
+state 195
+	one_method : return_type ID LPAREN list_params RPAREN SEMICOLON .  (33)
+
+	.  reduce 33
+
+
+state 196
+	for_stmt : FOR ID ASSIGN . expr TO expr DO statement  (59)
+	for_stmt : FOR ID ASSIGN . expr DOWNTO expr DO statement  (60)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 204
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 197
+	if_stmt : IF expr THEN . statement  (57)
+	if_stmt : IF expr THEN . statement ELSE statement  (58)
+
+	ID  shift 182
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	block_stmt  goto 159
+	statement  goto 205
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 198
+	statement : WHILE expr DO . statement  (40)
+
+	ID  shift 182
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	block_stmt  goto 159
+	statement  goto 206
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 199
+	statement : RETURN expr SEMICOLON .  (45)
+
+	.  reduce 45
+
+
+state 200
+	statement : REPEAT list_statements UNTIL . expr SEMICOLON  (41)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 207
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 201
+	lhs : expr LSQBRA expr . RSQBRA  (56)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	expr : expr LSQBRA expr . RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	RSQBRA  shift 208
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 202
+	lhs : expr DOT ID .  (55)
+	method_invocation_stmt : expr DOT ID . LPAREN list_expr RPAREN SEMICOLON  (61)
+	method_invocation_stmt : expr DOT ID . LPAREN RPAREN SEMICOLON  (62)
+	member_access : expr DOT ID .  (94)
+	member_access : expr DOT ID . LPAREN RPAREN  (95)
+	member_access : expr DOT ID . LPAREN list_expr RPAREN  (96)
+
+	LPAREN  shift 209
+	LSQBRA  reduce 94
+	DOT  reduce 94
+	ADD  reduce 94
+	SUB  reduce 94
+	MUL  reduce 94
+	INT_DIV  reduce 94
+	FLOAT_DIV  reduce 94
+	MOD  reduce 94
+	ASSIGN  reduce 55
+	LESS  reduce 94
+	LESS_EQUAL  reduce 94
+	NEQUAL  reduce 94
+	CONCAT  reduce 94
+	EQUAL  reduce 94
+	GREATER  reduce 94
+	GREATER_EQUAL  reduce 94
+	LOGIC_AND  reduce 94
+	LOGIC_OR  reduce 94
+
+
+state 203
+	assignment_stmt : lhs ASSIGN expr . SEMICOLON  (53)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	SEMICOLON  shift 210
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 204
+	for_stmt : FOR ID ASSIGN expr . TO expr DO statement  (59)
+	for_stmt : FOR ID ASSIGN expr . DOWNTO expr DO statement  (60)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	TO  shift 211
+	DOWNTO  shift 212
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 205
+	if_stmt : IF expr THEN statement .  (57)
+	if_stmt : IF expr THEN statement . ELSE statement  (58)
+
+	ELSE  shift 213
+	ID  reduce 57
+	LPAREN  reduce 57
+	LCURBRA  reduce 57
+	RCURBRA  reduce 57
+	STRING_LIT  reduce 57
+	FLOAT_LIT  reduce 57
+	INT_LIT  reduce 57
+	BOOL_LIT  reduce 57
+	BREAK  reduce 57
+	FOR  reduce 57
+	CONTINUE  reduce 57
+	IF  reduce 57
+	UNTIL  reduce 57
+	SELF  reduce 57
+	WHILE  reduce 57
+	NEW  reduce 57
+	RETURN  reduce 57
+	REPEAT  reduce 57
+	ADD  reduce 57
+	SUB  reduce 57
+	LOGIC_NOT  reduce 57
+
+
+state 206
+	statement : WHILE expr DO statement .  (40)
+
+	.  reduce 40
+
+
+state 207
+	statement : REPEAT list_statements UNTIL expr . SEMICOLON  (41)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	SEMICOLON  shift 214
+	DOT  shift 68
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 208
+	lhs : expr LSQBRA expr RSQBRA .  (56)
+	expr : expr LSQBRA expr RSQBRA .  (74)
+
+	LSQBRA  reduce 74
+	DOT  reduce 74
+	ADD  reduce 74
+	SUB  reduce 74
+	MUL  reduce 74
+	INT_DIV  reduce 74
+	FLOAT_DIV  reduce 74
+	MOD  reduce 74
+	ASSIGN  reduce 56
+	LESS  reduce 74
+	LESS_EQUAL  reduce 74
+	NEQUAL  reduce 74
+	CONCAT  reduce 74
+	EQUAL  reduce 74
+	GREATER  reduce 74
+	GREATER_EQUAL  reduce 74
+	LOGIC_AND  reduce 74
+	LOGIC_OR  reduce 74
+
+
+state 209
+	method_invocation_stmt : expr DOT ID LPAREN . list_expr RPAREN SEMICOLON  (61)
+	method_invocation_stmt : expr DOT ID LPAREN . RPAREN SEMICOLON  (62)
+	member_access : expr DOT ID LPAREN . RPAREN  (95)
+	member_access : expr DOT ID LPAREN . list_expr RPAREN  (96)
+
+	ID  shift 37
+	LPAREN  shift 38
+	RPAREN  shift 215
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 128
+	list_expr  goto 216
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 210
+	assignment_stmt : lhs ASSIGN expr SEMICOLON .  (53)
+
+	.  reduce 53
+
+
+state 211
+	for_stmt : FOR ID ASSIGN expr TO . expr DO statement  (59)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 217
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 212
+	for_stmt : FOR ID ASSIGN expr DOWNTO . expr DO statement  (60)
+
+	ID  shift 37
+	LPAREN  shift 38
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	SELF  shift 43
+	NEW  shift 44
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	expr  goto 218
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 213
+	if_stmt : IF expr THEN statement ELSE . statement  (58)
+
+	ID  shift 182
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	block_stmt  goto 159
+	statement  goto 219
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 214
+	statement : REPEAT list_statements UNTIL expr SEMICOLON .  (41)
+
+	.  reduce 41
+
+
+state 215
+	method_invocation_stmt : expr DOT ID LPAREN RPAREN . SEMICOLON  (62)
+	member_access : expr DOT ID LPAREN RPAREN .  (95)
+
+	SEMICOLON  shift 220
+	LSQBRA  reduce 95
+	DOT  reduce 95
+	ADD  reduce 95
+	SUB  reduce 95
+	MUL  reduce 95
+	INT_DIV  reduce 95
+	FLOAT_DIV  reduce 95
+	MOD  reduce 95
+	LESS  reduce 95
+	LESS_EQUAL  reduce 95
+	NEQUAL  reduce 95
+	CONCAT  reduce 95
+	EQUAL  reduce 95
+	GREATER  reduce 95
+	GREATER_EQUAL  reduce 95
+	LOGIC_AND  reduce 95
+	LOGIC_OR  reduce 95
+
+
+state 216
+	method_invocation_stmt : expr DOT ID LPAREN list_expr . RPAREN SEMICOLON  (61)
+	member_access : expr DOT ID LPAREN list_expr . RPAREN  (96)
+
+	RPAREN  shift 221
+	.  error
+
+
+state 217
+	for_stmt : FOR ID ASSIGN expr TO expr . DO statement  (59)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	DO  shift 222
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 218
+	for_stmt : FOR ID ASSIGN expr DOWNTO expr . DO statement  (60)
+	expr : expr . CONCAT expr  (73)
+	expr : expr . LSQBRA expr RSQBRA  (74)
+	arithmetic_expr : expr . ADD expr  (79)
+	arithmetic_expr : expr . SUB expr  (80)
+	arithmetic_expr : expr . MUL expr  (81)
+	arithmetic_expr : expr . INT_DIV expr  (82)
+	arithmetic_expr : expr . FLOAT_DIV expr  (83)
+	arithmetic_expr : expr . MOD expr  (84)
+	boolean_expr : expr . LOGIC_AND expr  (85)
+	boolean_expr : expr . LOGIC_OR expr  (86)
+	relational_expr : expr . EQUAL expr  (88)
+	relational_expr : expr . NEQUAL expr  (89)
+	relational_expr : expr . GREATER expr  (90)
+	relational_expr : expr . LESS expr  (91)
+	relational_expr : expr . GREATER_EQUAL expr  (92)
+	relational_expr : expr . LESS_EQUAL expr  (93)
+	member_access : expr . DOT ID  (94)
+	member_access : expr . DOT ID LPAREN RPAREN  (95)
+	member_access : expr . DOT ID LPAREN list_expr RPAREN  (96)
+
+	LSQBRA  shift 66
+	DOT  shift 68
+	DO  shift 223
+	ADD  shift 69
+	SUB  shift 70
+	MUL  shift 71
+	INT_DIV  shift 72
+	FLOAT_DIV  shift 73
+	MOD  shift 74
+	LESS  shift 75
+	LESS_EQUAL  shift 76
+	NEQUAL  shift 77
+	CONCAT  shift 78
+	EQUAL  shift 79
+	GREATER  shift 80
+	GREATER_EQUAL  shift 81
+	LOGIC_AND  shift 82
+	LOGIC_OR  shift 83
+	.  error
+
+
+state 219
+	if_stmt : IF expr THEN statement ELSE statement .  (58)
+
+	.  reduce 58
+
+
+state 220
+	method_invocation_stmt : expr DOT ID LPAREN RPAREN SEMICOLON .  (62)
+
+	.  reduce 62
+
+
+state 221
+	method_invocation_stmt : expr DOT ID LPAREN list_expr RPAREN . SEMICOLON  (61)
+	member_access : expr DOT ID LPAREN list_expr RPAREN .  (96)
+
+	SEMICOLON  shift 224
+	LSQBRA  reduce 96
+	DOT  reduce 96
+	ADD  reduce 96
+	SUB  reduce 96
+	MUL  reduce 96
+	INT_DIV  reduce 96
+	FLOAT_DIV  reduce 96
+	MOD  reduce 96
+	LESS  reduce 96
+	LESS_EQUAL  reduce 96
+	NEQUAL  reduce 96
+	CONCAT  reduce 96
+	EQUAL  reduce 96
+	GREATER  reduce 96
+	GREATER_EQUAL  reduce 96
+	LOGIC_AND  reduce 96
+	LOGIC_OR  reduce 96
+
+
+state 222
+	for_stmt : FOR ID ASSIGN expr TO expr DO . statement  (59)
+
+	ID  shift 182
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	block_stmt  goto 159
+	statement  goto 225
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 223
+	for_stmt : FOR ID ASSIGN expr DOWNTO expr DO . statement  (60)
+
+	ID  shift 182
+	LPAREN  shift 38
+	LCURBRA  shift 136
+	STRING_LIT  shift 39
+	FLOAT_LIT  shift 40
+	INT_LIT  shift 41
+	BOOL_LIT  shift 42
+	BREAK  shift 151
+	FOR  shift 152
+	CONTINUE  shift 153
+	IF  shift 154
+	SELF  shift 43
+	WHILE  shift 155
+	NEW  shift 44
+	RETURN  shift 156
+	REPEAT  shift 157
+	ADD  shift 45
+	SUB  shift 46
+	LOGIC_NOT  shift 47
+	.  error
+
+	block_stmt  goto 159
+	statement  goto 226
+	expr  goto 163
+	assignment_stmt  goto 164
+	if_stmt  goto 165
+	for_stmt  goto 166
+	method_invocation_stmt  goto 167
+	lhs  goto 169
+	arithmetic_expr  goto 49
+	boolean_expr  goto 50
+	relational_expr  goto 51
+	member_access  goto 52
+	object_creation  goto 53
+
+
+state 224
+	method_invocation_stmt : expr DOT ID LPAREN list_expr RPAREN SEMICOLON .  (61)
+
+	.  reduce 61
+
+
+state 225
+	for_stmt : FOR ID ASSIGN expr TO expr DO statement .  (59)
+
+	.  reduce 59
+
+
+state 226
+	for_stmt : FOR ID ASSIGN expr DOWNTO expr DO statement .  (60)
+
+	.  reduce 60
+
+
+63 terminals, 42 nonterminals
+112 grammar rules, 227 states
