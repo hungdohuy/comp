@@ -205,6 +205,7 @@ expr:
 	|BOOL_LIT	{}
 	|STRING_LIT	{}
 	|SELF	{}
+	|NULL	{}
 	|LPAREN expr RPAREN	{}
 	|arithmetic_expr	{}
 	|boolean_expr	{}

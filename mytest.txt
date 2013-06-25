@@ -11,7 +11,7 @@ class A{
 	length:bool;
 }
 class A	{ 
-	a = 1; a = -1; a=+1; 
+	a = null; a = -1; a=+1; 
 	a = 1+1; a= 1-1; a=1*1; a=1/1; a=1\1; a=1%1;  
 	a = 1.; a = 1.5; a = 1e2; a = 1e-2;
 	a = 1 && 1; a = 1 || 1; a = !true;
@@ -46,6 +46,7 @@ NameOfClass::Contructor(){
 NameOfClass::Contructor(x:integer){
 	self.length := length\2;
 	self.width := width;
+
 }
 integer Main::factorial(){
 	
@@ -99,8 +100,9 @@ void Main::main() {
 		if (a>=1) && (b<=1) then
 			a:= 1;	
 			
-	if a==1 then
+	if a<>null then
 	{
+	a:=null;
 	}
 	else
 		if(true) then b:=1;
