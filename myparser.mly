@@ -101,7 +101,7 @@ another_param:
 
 list_attributes_decl:
 	attribute_decl	{}
-	|attribute_decl list_attributes_decl	{}
+	|list_attributes_decl attribute_decl 	{}
 ;
 
 list_statements:
@@ -160,17 +160,11 @@ statement:
 ;
 
 block_stmt:
-	|LCURBRA RCURBRA	{}
-	|LCURBRA list_statements RCURBRA	{}
+	LCURBRA RCURBRA	{}
+	|LCURBRA list_attributes_decl list_statements RCURBRA	{}
 	|LCURBRA list_attributes_decl RCURBRA	{}
-	|LCURBRA bullshit_list RCURBRA	{}	
+	|LCURBRA list_statements RCURBRA	{}
 ;
-
-bullshit_list:
-	|attribute_decl bullshit_list	{}
-	|attribute_decl list_statements {}
-;
-
 assignment_stmt:
 	lhs ASSIGN expr SEMICOLON	{}
 ;
