@@ -162,9 +162,10 @@ void Main::main() {
 	b := true;
 	b := false;
 }
-#This is the method declaration part
-integer Main::factorial(n:integer){
 
+
+#This is the method declaration part
+integer Main::factorial(n:void){
 if n == 0 then return 1; else return n * self.factorial(n - 1);
 }
 void Main::main() {

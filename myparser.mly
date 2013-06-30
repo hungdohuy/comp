@@ -3,6 +3,7 @@
 /* Your id: PUFMINF1204   */  
 
 %{
+open Ast;;
 
 %}
 
@@ -40,240 +41,69 @@
 %nonassoc NEW
 /*Highest precedence*/
 
-
 /* Start symbol S's declaration (which symbol of the start symbol) */
 %start program /*the entry point*/
-%type <unit> program 
+%type <Ast.programAST> program 
 
 %%
 
 /* Rule definitions */
 
 program:
-	many_declarations	EOF	{}
+	many_declarations	EOF	{$1}
 ;
 
 many_declarations:
-	declaration	{}
-	|declaration many_declarations	{}
+	declaration	{[$1]}
+	|declaration many_declarations	{$1::$2}
 ;
 
 declaration:
-	attribute_decl	{}
-	|one_class_decl	{}
-	|one_method_decl	{}
-;
-
-one_class_decl:
-	CLASS ID LCURBRA list_members_decl RCURBRA {}
-	|CLASS ID EXTENDS ID LCURBRA list_members_decl RCURBRA {}
-;
-
-one_method_decl:
-	return_type ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt	{}
-	|ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt	{}
-;
-
-list_members_decl:
-	{}
-	|member_decl list_members_decl	{}
-;
-
-list_params:
-	{}
-	|combine_var_decl	{}
-	|combine_var_decl SEMICOLON another_param	{}
-;
-
-member_decl:
-	|attribute_decl	{}
-	|method_prototype	{}
-;
-
-combine_var_decl:
-	list_id COLON value_type	{}
-;
-
-another_param:
-	combine_var_decl {}
-	|combine_var_decl SEMICOLON another_param	{}
-;
-
-list_attributes_decl:
-	attribute_decl	{}
-	|list_attributes_decl attribute_decl 	{}
-;
-
-list_statements:
-	|statement	{}
-	|statement list_statements	{}
+	attribute_decl	{$1}
 ;
 
 attribute_decl:
-	variables_decl	{}
-	|constants_decl	{}
-;
-
-method_prototype:
-	one_method	{}
-	|constructor	{}
+	variables_decl	{$1}
+	|constants_decl	{$1}
 ;
 
 variables_decl:
-	list_id COLON value_type SEMICOLON	{}
+	list_id COLON value_type SEMICOLON	{VarDecl($1,$3)}
 ;
 
 constants_decl:
-	ID ASSIGN_CONST expr SEMICOLON	{}
+	ID ASSIGN_CONST expr SEMICOLON	{ConstDecl($1,$3)}
 ;
 
 list_id:
-	ID	{}
-	|ID	COMMA list_id	{}
+	ID	{$1}
+	|ID	COMMA list_id	{$1}
 ;
-
-one_method:
-	return_type ID LPAREN list_params RPAREN SEMICOLON	{}
-;
-
-constructor:
-	ID LPAREN list_params RPAREN SEMICOLON	{}
-;
-
-list_expr:
-	expr	{}
-	|expr COMMA list_expr	{}
-;
-
-/*Statement declaration*/
-statement:
-	block_stmt	{}
-	|assignment_stmt	{}
-	|if_stmt	{}
-	|WHILE expr DO statement	{}
-	|REPEAT list_statements UNTIL expr SEMICOLON	{}
-	|for_stmt	{}
-	|BREAK SEMICOLON	{}
-	|CONTINUE SEMICOLON {}
-	|RETURN expr SEMICOLON	{}
-	|method_invocation_stmt	{}
-;
-
-block_stmt:
-	LCURBRA RCURBRA	{}
-	|LCURBRA list_attributes_decl list_statements RCURBRA	{}
-	|LCURBRA list_attributes_decl RCURBRA	{}
-	|LCURBRA list_statements RCURBRA	{}
-;
-assignment_stmt:
-	lhs ASSIGN expr SEMICOLON	{}
-;
-
-lhs:
-	ID {}
-	|expr DOT ID {}
-	|expr LSQBRA expr RSQBRA  {} 
-;
-
-if_stmt:
-	IF expr THEN statement	%prec IF_THEN	{}
-	|IF expr THEN statement ELSE statement	{}
-;
-
-for_stmt:
-	FOR ID ASSIGN expr TO expr DO statement	{}
-	|FOR ID ASSIGN expr DOWNTO expr DO statement	{}
-;
-
-method_invocation_stmt:
-	expr DOT ID LPAREN list_expr RPAREN SEMICOLON	{}
-	|expr DOT ID LPAREN RPAREN SEMICOLON	{}
-;
-
-/*Expression declaration*/
-
-expr:
-	ID	{}
-	|INT_LIT	{}
-	|FLOAT_LIT	{}
-	|BOOL_LIT	{}
-	|STRING_LIT	{}
-	|SELF	{}
-	|NULL	{}
-	|LPAREN expr RPAREN	{}
-	|arithmetic_expr	{}
-	|boolean_expr	{}
-	|relational_expr	{}
-	|expr CONCAT expr	{}	/*String expression*/
-	|expr LSQBRA expr RSQBRA	{}	/*Index expression*/
-	|member_access	{}
-	|object_creation	{}
-;
-
-arithmetic_expr:
-	|ADD expr %prec UNARY	{}
-	|SUB expr %prec UNARY	{}
-	|expr ADD expr	{}
-	|expr SUB expr	{}
-	|expr MUL expr	{}
-	|expr INT_DIV expr	{}
-	|expr FLOAT_DIV expr	{}
-	|expr MOD expr	{}
-;
-
-boolean_expr:
-	|expr LOGIC_AND expr	{}
-	|expr LOGIC_OR	expr	{}
-	|LOGIC_NOT expr	{}
-;
-
-relational_expr:
-	|expr EQUAL expr	{}
-	|expr NEQUAL expr	{}
-	|expr GREATER expr	{}
-	|expr LESS expr	{}
-	|expr GREATER_EQUAL expr	{}
-	|expr LESS_EQUAL expr	{}
-;
-
-member_access:
-	|expr DOT ID	{}
-	|expr DOT ID LPAREN RPAREN	{}
-	|expr DOT ID LPAREN	list_expr RPAREN	{}
-;
-
-object_creation:
-	|NEW ID LPAREN RPAREN	{}
-	|NEW ID LPAREN list_expr RPAREN	{}
-;
-/*Type definition*/
 
 return_type:
-	value_type	{}
-	|VOID	{}
+	value_type	{$1}
 ;
 
 value_type:
-	element_type	{}
-	|array	{}
-;
-
-array:
-	element_type LSQBRA INT_LIT RSQBRA	{}
+	element_type	{$1}
 ;
 
 element_type:	
-	primitive	{}
-	|classtype	{}
+	primitive	{$1}
 ;
 
 primitive:
-	INTEGER	{}
-	|FLOAT	{}
-	|STRING	{}
-	|BOOL	{}
+	INTEGER	{IntType}
+	|FLOAT	{FloatType}
+	|STRING	{StringType}
+	|BOOL	{BoolType}
 ;
 
-classtype:
-	ID	{}
+expr:
+	ID			{Lhs(Id($1))}
+	|INT_LIT	{Lit(IntVal($1))}
+	|FLOAT_LIT	{Lit(FloatVal($1))}
+	|STRING_LIT	{Lit(StringVal($1))}
+	|SELF	{Self}
+	|NULL	{Lit(Null)}
 ;

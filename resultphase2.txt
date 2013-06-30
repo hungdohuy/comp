@@ -1,0 +1,613 @@
+File mylexer.mll
+(* Lexer specification *)
+(* Your name: 	DO HUY HUNG  *)
+(* Your id: 	PUFMINF1204    *)
+
+{
+
+open Myparser	
+open Lexing
+
+
+exception UnrecognizeChar of string
+exception UnrecognizeEscapedChar of string
+exception UnterminateString
+exception UnterminateComment
+}
+(*pre-define variable*)
+let digit = ['0'-'9']
+let letter = ['a'-'z' 'A'-'Z' '_']
+let int_part = ['0'-'9']+
+let ex_part = ['e' 'E']['+' '-']?['0' - '9']+
+
+(*---------------------------------------------------------------------------------*)
+rule token = parse
+	| [' ' '\t'] 	{ token lexbuf } (*skip blanks*)
+	| '\n'				{ new_line lexbuf; token lexbuf }
+	| "(*"				{comment1 lexbuf}
+	| '#'				{comment2 lexbuf}
+
+	| '('				{LPAREN}
+	| ')'				{RPAREN}
+	| '['				{LSQBRA}
+	| ']'				{RSQBRA}
+	| '{'				{LCURBRA}
+	| '}'				{RCURBRA}
+	| ':' 				{COLON}
+	| ';' 				{SEMICOLON}
+	| "::"				{DOUBLECOLON}
+	| '.'				{DOT}
+	| ','				{COMMA}
+
+	| '+'				{ADD}
+	| '*'				{MUL}
+	| '\\'				{INT_DIV}
+	| ":="				{ASSIGN}
+	| '<'				{LESS}
+	| "<="				{LESS_EQUAL}
+	| "<>"				{NEQUAL}
+	| '!'				{LOGIC_NOT}
+	| '^'				{CONCAT}
+	| '-'				{SUB}
+	| '/'				{FLOAT_DIV}
+	| '%'				{MOD}
+	| "=="				{EQUAL}
+	| '='				{ASSIGN_CONST}
+	| '>'				{GREATER}
+	| ">="				{GREATER_EQUAL}
+	| "&&"				{LOGIC_AND}
+	| "||"				{LOGIC_OR}
+
+	| "integer"			{INTEGER}
+	| "bool"			{BOOL}
+	| "extends"			{EXTENDS}
+	| "string"			{STRING}
+	| "break"			{BREAK}
+	| "float"			{FLOAT}
+	| "then"			{THEN}
+	| "void"			{VOID}
+	| "class"			{CLASS}
+	| "for"				{FOR}
+	| "to"				{TO}
+	| "null"			{NULL}
+	| "continue"		{CONTINUE}
+	| "if"				{IF}
+	| "until"			{UNTIL}
+	| "self"			{SELF}
+	| "do"				{DO}
+	| "while"			{WHILE}
+	| "downto"			{DOWNTO}
+	| "new"				{NEW}
+	| "return"			{RETURN}
+	| "else"			{ELSE}
+	| "repeat"			{REPEAT}
+	| "true"|"false" as e	{BOOL_LIT (bool_of_string e)}
+
+	|'"' 				{string_lit "" lexbuf}  (*call string_lit entry point*)
+	| letter+(letter|digit)* as e	{ID e}
+	| int_part "." ['0' - '9']* | int_part "." ['0' - '9']* ex_part | int_part ex_part as e	{FLOAT_LIT (float_of_string e)}
+	| digit+ as e		{INT_LIT (int_of_string e)}
+	| eof	     		{ EOF }
+	| _          		{ raise (UnrecognizeChar (lexeme lexbuf)) } 
+and
+	string_lit a = parse
+	|'\\' as c		{escape (a^(String.make 1 c)) lexbuf} (*call escape entry point*)
+	|'"' 			{STRING_LIT a} (*return token when string match with given regular expression*)
+	|'\n'|eof		{raise UnterminateString}
+	| _	as b		{string_lit (a^(String.make 1 b)) lexbuf} (*recursively entry point*)
+and
+	escape c = parse
+	|['b' 't' 'f' 'r' 'n' '"' '\\']	as d {string_lit (c^(String.make 1 d)) lexbuf}
+	| _		{raise (UnrecognizeEscapedChar (lexeme lexbuf)) }
+and
+	comment1 = parse
+	|"*)"	{token lexbuf}
+	| eof	{raise UnterminateComment}
+	| _		{comment1 lexbuf}
+and 
+	comment2 = parse
+	|'\n'|eof	{token lexbuf}
+	| _			{comment2 lexbuf}File myparser.mly
+/* Parser specification   */
+/* Your name: DO Huy Hung */
+/* Your id: PUFMINF1204   */  
+
+%{
+
+%}
+
+/* token declarations */
+
+%token EOF
+%token <string> ID
+%token LPAREN RPAREN LSQBRA RSQBRA LCURBRA RCURBRA COLON SEMICOLON DOUBLECOLON DOT COMMA
+%token INTEGER BOOL EXTENDS STRING FLOAT
+%token <string> STRING_LIT
+%token <float> FLOAT_LIT
+%token <int> INT_LIT
+%token <bool> BOOL_LIT 
+%token BREAK THEN VOID CLASS FOR TO NULL CONTINUE IF UNTIL SELF DO WHILE DOWNTO NEW RETURN ELSE REPEAT
+%token ADD SUB MUL INT_DIV FLOAT_DIV MOD ASSIGN ASSIGN_CONST
+%token LESS LESS_EQUAL NEQUAL LOGIC_NOT CONCAT  EQUAL GREATER GREATER_EQUAL LOGIC_AND LOGIC_OR
+
+/*Lowest precedence*/
+%nonassoc LESS GREATER LESS_EQUAL GREATER_EQUAL
+%nonassoc EQUAL NEQUAL
+
+%left LOGIC_AND LOGIC_OR
+%left ADD SUB
+%left MUL FLOAT_DIV INT_DIV MOD
+%left CONCAT
+
+%nonassoc IF_THEN
+%nonassoc ELSE
+%nonassoc LOGIC_NOT
+%nonassoc UNARY
+%nonassoc LSQBRA RSQBRA
+
+%left DOT
+
+%nonassoc NEW
+/*Highest precedence*/
+
+
+/* Start symbol S's declaration (which symbol of the start symbol) */
+%start program /*the entry point*/
+%type <unit> program 
+
+%%
+
+/* Rule definitions */
+
+program:
+	many_declarations	EOF	{}
+;
+
+many_declarations:
+	declaration	{}
+	|declaration many_declarations	{}
+;
+
+declaration:
+	attribute_decl	{}
+	|one_class_decl	{}
+	|one_method_decl	{}
+;
+
+one_class_decl:
+	CLASS ID LCURBRA list_members_decl RCURBRA {}
+	|CLASS ID EXTENDS ID LCURBRA list_members_decl RCURBRA {}
+;
+
+one_method_decl:
+	return_type ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt	{}
+	|ID DOUBLECOLON ID LPAREN list_params RPAREN block_stmt	{}
+;
+
+list_members_decl:
+	{}
+	|member_decl list_members_decl	{}
+;
+
+list_params:
+	{}
+	|combine_var_decl	{}
+	|combine_var_decl SEMICOLON another_param	{}
+;
+
+member_decl:
+	|attribute_decl	{}
+	|method_prototype	{}
+;
+
+combine_var_decl:
+	list_id COLON value_type	{}
+;
+
+another_param:
+	combine_var_decl {}
+	|combine_var_decl SEMICOLON another_param	{}
+;
+
+list_attributes_decl:
+	attribute_decl	{}
+	|attribute_decl list_attributes_decl	{}
+;
+
+list_statements:
+	|statement	{}
+	|statement list_statements	{}
+;
+
+attribute_decl:
+	variables_decl	{}
+	|constants_decl	{}
+;
+
+method_prototype:
+	one_method	{}
+	|constructor	{}
+;
+
+variables_decl:
+	list_id COLON value_type SEMICOLON	{}
+;
+
+constants_decl:
+	ID ASSIGN_CONST expr SEMICOLON	{}
+;
+
+list_id:
+	ID	{}
+	|ID	COMMA list_id	{}
+;
+
+one_method:
+	return_type ID LPAREN list_params RPAREN SEMICOLON	{}
+;
+
+constructor:
+	ID LPAREN list_params RPAREN SEMICOLON	{}
+;
+
+list_expr:
+	expr	{}
+	|expr COMMA list_expr	{}
+;
+
+/*Statement declaration*/
+statement:
+	block_stmt	{}
+	|assignment_stmt	{}
+	|if_stmt	{}
+	|WHILE expr DO statement	{}
+	|REPEAT list_statements UNTIL expr SEMICOLON	{}
+	|for_stmt	{}
+	|BREAK SEMICOLON	{}
+	|CONTINUE SEMICOLON {}
+	|RETURN expr SEMICOLON	{}
+	|method_invocation_stmt	{}
+;
+
+block_stmt:
+	|LCURBRA RCURBRA	{}
+	|LCURBRA list_statements RCURBRA	{}
+	|LCURBRA list_attributes_decl RCURBRA	{}
+	|LCURBRA bullshit_list RCURBRA	{}	
+;
+
+bullshit_list:
+	|attribute_decl bullshit_list	{}
+	|attribute_decl list_statements {}
+;
+
+assignment_stmt:
+	lhs ASSIGN expr SEMICOLON	{}
+;
+
+lhs:
+	ID {}
+	|expr DOT ID {}
+	|expr LSQBRA expr RSQBRA  {} 
+;
+
+if_stmt:
+	IF expr THEN statement	%prec IF_THEN	{}
+	|IF expr THEN statement ELSE statement	{}
+;
+
+for_stmt:
+	FOR ID ASSIGN expr TO expr DO statement	{}
+	|FOR ID ASSIGN expr DOWNTO expr DO statement	{}
+;
+
+method_invocation_stmt:
+	expr DOT ID LPAREN list_expr RPAREN SEMICOLON	{}
+	|expr DOT ID LPAREN RPAREN SEMICOLON	{}
+;
+
+/*Expression declaration*/
+
+expr:
+	ID	{}
+	|INT_LIT	{}
+	|FLOAT_LIT	{}
+	|BOOL_LIT	{}
+	|STRING_LIT	{}
+	|SELF	{}
+	|LPAREN expr RPAREN	{}
+	|arithmetic_expr	{}
+	|boolean_expr	{}
+	|relational_expr	{}
+	|expr CONCAT expr	{}	/*String expression*/
+	|expr LSQBRA expr RSQBRA	{}	/*Index expression*/
+	|member_access	{}
+	|object_creation	{}
+;
+
+arithmetic_expr:
+	|ADD expr %prec UNARY	{}
+	|SUB expr %prec UNARY	{}
+	|expr ADD expr	{}
+	|expr SUB expr	{}
+	|expr MUL expr	{}
+	|expr INT_DIV expr	{}
+	|expr FLOAT_DIV expr	{}
+	|expr MOD expr	{}
+;
+
+boolean_expr:
+	|expr LOGIC_AND expr	{}
+	|expr LOGIC_OR	expr	{}
+	|LOGIC_NOT expr	{}
+;
+
+relational_expr:
+	|expr EQUAL expr	{}
+	|expr NEQUAL expr	{}
+	|expr GREATER expr	{}
+	|expr LESS expr	{}
+	|expr GREATER_EQUAL expr	{}
+	|expr LESS_EQUAL expr	{}
+;
+
+member_access:
+	|expr DOT ID	{}
+	|expr DOT ID LPAREN RPAREN	{}
+	|expr DOT ID LPAREN	list_expr RPAREN	{}
+;
+
+object_creation:
+	|NEW ID LPAREN RPAREN	{}
+	|NEW ID LPAREN list_expr RPAREN	{}
+;
+/*Type definition*/
+
+return_type:
+	value_type	{}
+	|VOID	{}
+;
+
+value_type:
+	element_type	{}
+	|array	{}
+;
+
+array:
+	element_type LSQBRA INT_LIT RSQBRA	{}
+;
+
+element_type:	
+	primitive	{}
+	|classtype	{}
+;
+
+primitive:
+	INTEGER	{}
+	|FLOAT	{}
+	|STRING	{}
+	|BOOL	{}
+;
+
+classtype:
+	ID	{}
+;
+_______Compiling_________
+Parser generated
+Lexer generated
+mli compiled
+Lexer compiled
+Parser compiled
+Driver compiled
+Drive.exe generated
+________Running________
+Test 1
+Test 2
+Test 3
+Test 4
+Test 5
+Test 6
+Test 7
+Test 8
+Test 9
+Test 10
+Test 11
+Test 12
+Test 13
+Test 14
+Test 15
+Test 16
+Test 17
+Test 18
+Test 19
+Test 20
+Test 21
+Test 22
+Test 23
+Test 24
+Test 25
+Test 26
+Test 27
+Test 28
+Test 29
+Test 30
+Test 31
+Test 32
+Test 33
+Test 34
+Test 35
+Test 36
+Test 37
+Test 38
+Test 39
+Test 40
+Test 41
+Test 42
+Test 43
+Test 44
+Test 45
+Test 46
+Test 47
+Test 48
+Test 49
+Test 50
+Test 51
+Test 52
+Test 53
+Test 54
+Test 55
+Test 56
+Test 57
+Test 58
+Test 59
+Test 60
+Test 61
+Test 62
+Test 63
+Test 64
+Test 65
+Test 66
+Test 67
+Test 68
+Test 69
+Test 70
+Test 71
+Test 72
+Test 73
+Test 74
+Test 75
+Test 76
+Test 77
+Test 78
+Test 79
+Test 80
+Test 81
+Test 82
+Test 83
+Test 84
+Test 85
+Test 86
+Test 87
+Test 88
+Test 89
+Test 90
+Test 91
+Test 92
+Test 93
+Test 94
+Test 95
+Test 96
+Test 97
+Test 98
+Test 99
+Test 100
+________Testing________
+Test 1 passed
+Test 2 passed
+Test 3 passed
+Test 4 passed
+Test 5 passed
+Test 6 passed
+Test 7 passed
+Test 8 passed
+Test 9 passed
+Test 10 passed
+Test 11 passed
+Test 12 passed
+Test 13 passed
+Test 14 passed
+Test 15 passed
+Test 16 passed
+Test 17 passed
+Test 18 passed
+Test 19 passed
+Test 20 passed
+Test 21 passed
+Test 22 passed
+Test 23 passed
+Test 24 passed
+Test 25 passed
+Test 26 passed
+Test 27 passed
+Test 28 passed
+Test 29 passed
+Test 30 passed
+Test 31 passed
+Test 32 passed
+Test 33 passed
+Test 34 passed
+Test 35 passed
+Test 36 passed
+Test 37 passed
+Test 38 passed
+Test 39 passed
+Test 40 passed
+Test 41 passed
+Test 42 passed
+Test 43 passed
+Test 44 passed
+Test 45 passed
+Test 46 passed
+Test 47 passed
+Test 48 passed
+Test 49 passed
+Test 50 passed
+Test 51 passed
+Test 52 passed
+Test 53 passed
+Test 54 passed
+Test 55 passed
+Test 56 passed
+Test 57 passed
+Test 58 passed
+Test 59 passed
+Test 60 passed
+Test 61 passed
+Test 62 passed
+Test 63 passed
+Test 64 passed
+Test 65 passed
+Test 66 passed
+Test 67 passed
+Test 68 passed
+Test 69 passed
+Test 70 passed
+Test 71 passed
+Test 72 passed
+Test 73 passed
+Test 74 passed
+Test 75 passed
+Test 76 passed
+Test 77 passed
+Test 78 passed
+Test 79 passed
+Test 80 passed
+Test 81 passed
+Test 82 passed
+Test 83 passed
+Test 84 passed
+Test 85 passed
+Test 86 passed
+Test 87 passed
+Test 88 passed
+Test 89 passed
+Test 90 passed
+Test 91 passed
+Test 92 passed
+Test 93 passed
+Test 94 passed
+Test 95 failed
+Correct result compares with your result
+1c1
+< Fatal error: exception Driver.Error(42, 0, "")
+---
+> Fatal error: exception Driver.Error(22, 26, "null")
+***************************
+Test 96 passed
+Test 97 passed
+Test 98 passed
+Test 99 passed
+Test 100 passed
+Result: 99
+Limit 90 because of too many (0) conflicts
+90
