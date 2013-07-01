@@ -4,14 +4,13 @@
 
 %{
 open Ast;;
-let rec combine func(listid,vtype) = 
+let rec combine listid vtype = 
 	match listid with
 	|[]-> []
-	|h::t	-> func(h,vtype); combine func(t,vtype);;
+	|head::tail	-> VarDecl(head,vtype)::(combine tail vtype)
 %}
 
 /* token declarations */
-
 %token EOF
 %token <string> ID
 %token LPAREN RPAREN LSQBRA RSQBRA LCURBRA RCURBRA COLON SEMICOLON DOUBLECOLON DOT COMMA
@@ -33,7 +32,7 @@ let rec combine func(listid,vtype) =
 %left MUL FLOAT_DIV INT_DIV MOD
 %left CONCAT
 
-%nonassoc IFX
+%nonassoc IF_THEN
 %nonassoc ELSE
 
 %nonassoc LOGIC_NOT
@@ -58,14 +57,14 @@ program:
 ;
 
 many_declarations:
-	declaration						{[$1]}
-	|declaration many_declarations	{$1::$2}
+	declaration						{$1}
+	|declaration many_declarations	{$1 @ $2}
 ;
 
 declaration:
 	attribute_decl		{$1}
-	|one_class_decl		{$1}
-	|one_method_decl	{$1}
+	|one_class_decl		{[$1]}
+	|one_method_decl	{[$1]}
 ;
 
 one_class_decl:
@@ -85,7 +84,7 @@ method_prototype:
 
 list_members_decl:
 	{[]}
-	|member_decl list_members_decl	{$1::$2}
+	|member_decl list_members_decl	{$1 @ $2}
 ;
 
 one_method:
@@ -98,31 +97,31 @@ constructor:
 
 member_decl:
 	attribute_decl		{$1}
-	|method_prototype	{$1}
+	|method_prototype	{[$1]}
 ;
 
 list_params:
 	{[]}
-	|combine_var_decl	{[$1]}
-	|combine_var_decl SEMICOLON another_param	{$1::$3}
+	|combine_var_decl	{$1}
+	|combine_var_decl SEMICOLON another_param	{$1 @ $3}
 ;
 
 combine_var_decl:
-	list_id COLON value_type	{VarDecl($1,$3)}
+	list_id COLON value_type	{combine $1 $3}
 ;
 
 another_param:
-	combine_var_decl {[$1]}
-	|combine_var_decl SEMICOLON another_param	{$1::$3}
+	combine_var_decl {$1}
+	|combine_var_decl SEMICOLON another_param	{$1 @ $3}
 ;
 
 attribute_decl:
 	variables_decl	{$1}
-	|constants_decl	{$1}
+	|constants_decl	{[$1]}
 ;
 
 variables_decl:
-	list_id COLON value_type SEMICOLON	{VarDecl($1,$3)}
+	list_id COLON value_type SEMICOLON	{combine $1 $3}
 ;
 
 constants_decl:
@@ -130,8 +129,8 @@ constants_decl:
 ;
 
 list_id:
-	ID					{$1}
-	|ID	COMMA list_id	{$1}
+	ID					{[$1]}
+	|ID	COMMA list_id	{$1::$3}
 ;
 
 body:
@@ -143,8 +142,8 @@ body:
 ;
 
 list_attributes_decl:
-	attribute_decl	{[$1]}
-	|list_attributes_decl attribute_decl 	{$1 @ [$2]}
+	attribute_decl	{$1}
+	|list_attributes_decl attribute_decl 	{$1 @ $2}
 ;
 
 return_type:
@@ -275,7 +274,7 @@ lhs:
 
 if_stmt:
 	IF expr THEN statement ELSE statement	{IfThenElse($2,$4,$6)}	
-	|IF expr THEN statement %prec IFX		{IfThen($2,$4)}
+	|IF expr THEN statement %prec IF_THEN		{IfThen($2,$4)}
 	
 ;
 

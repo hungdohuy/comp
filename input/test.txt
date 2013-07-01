@@ -1,16 +1,19 @@
-class a extends b{
-	a:integer;
-	b=a[5+5*4-1];
-	a=b.foo;
-	fsdfs(i:integer);
-	float a(asb:er);
-
-}
-
-dsfsdfd::Integer(i:integer){
-	for a:=10 to 1 do
-		a:=1;
-	for i:=1 downto 10 do
-		i:=2;
-		a:= new a();
+void Main::main() {
+ if (a==1) then
+ {
+ }
+ else
+ {
+  if true then a;
+  else 
+   if a=b then c 
+    else if a=c then ;
+ }
+  
+ if a==1 then
+  if a==1 then{
+   a:=1;b:=2;
+  }
+  else
+   b:=1;
 }
