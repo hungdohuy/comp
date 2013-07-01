@@ -1,6 +1,0 @@
-a = a.name;
-a = a.getName();
-a = a.getName(1,2);
-a = 2 * b;
-a = "abc";
-a = null;

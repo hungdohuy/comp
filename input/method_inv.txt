@@ -1,4 +1,0 @@
-void Main::main() {
-x := io.readInt();
-io.writeIntLn(self.factorial(x));
-}

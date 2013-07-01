@@ -1,8 +1,0 @@
-NameOfClass::Contructor(x:integer){
-	{
-		r:=2.0;
-		s:=r*r*myPI;
-		a[0]:= s;
-		a=5;
-	}
-}

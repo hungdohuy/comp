@@ -1,6 +1,0 @@
-void Main::main() {
-
-aPI := 3.14;
-value := x.foo(5);
-l[3] := value * 2;
-}

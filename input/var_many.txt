@@ -1,4 +1,0 @@
-a,b,c:int;
-a:int[5];
-a:Shape;
-a:Shape[5];

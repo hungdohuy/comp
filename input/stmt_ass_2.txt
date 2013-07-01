@@ -1,5 +1,0 @@
-NameOfClass::Contructor(x:integer){
-	x=a;
-	self.width := width;
-	
-}

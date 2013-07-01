@@ -1,5 +1,0 @@
-
-NameOfClass::Contructor(x:integer){
-	a = new abc(a0,a1,1);a =new a();
-	a = new void(a10);
-}

@@ -1,6 +1,0 @@
-NameOfClass::Contructor(x:integer){
-	{
-	{}
-}
-	
-}

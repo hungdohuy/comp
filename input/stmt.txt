@@ -1,6 +1,0 @@
-NameOfClass::Contructor(x:integer){
-	self.length := length\2;
-	self.width := width;
-	a:=new abc();
-	a:=new b();
-}

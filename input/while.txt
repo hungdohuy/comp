@@ -1,9 +1,0 @@
-void Main::main() {
-	while (a>b)
-	do { 
-		a:=1;
-
-		io.writeIntLn(self.factorial(x));
-
-	}
-}

@@ -1,9 +1,0 @@
-class A extends B {
- 	float scale(s:integer);
-	void scale(s:integer);
-	float scale();
-	scale();
-
-}
-
-	
