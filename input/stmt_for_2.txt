@@ -1,0 +1,14 @@
+void Main::main() {
+	for i := 1 to 100 do {
+		a:=1;
+		Intarray[i] := i + 1;
+		a:=1;
+		break;
+		if (a==b) then a:=1;
+		x := io.readInt(2);
+		x := io.readInt();
+		return a;
+		return self;
+return null;
+	}
+}

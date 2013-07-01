@@ -1,3 +1,4 @@
+@echo off
 ocamlc -c ast.ml
 ocamlc -c pp.ml
 ocamlyacc myparser.mly

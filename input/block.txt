@@ -1,0 +1,13 @@
+NameOfClass::Contructor(x:integer){
+	{
+ 
+		r:=2.0;
+		s:=r*r*myPI;
+		a[0]:= s;
+		
+		r,s:oat;
+		a,b:integer[5];
+		a=1;
+	
+	}
+}

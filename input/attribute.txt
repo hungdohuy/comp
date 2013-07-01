@@ -1,0 +1,8 @@
+class A extends B{
+	immuAttribute = 0;
+	float getArea();
+	a,b:int;
+	float getVolume();
+	void scale(s:integer);
+	Rectangle(a,b:float);
+}

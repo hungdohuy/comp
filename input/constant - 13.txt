@@ -1,0 +1,4 @@
+
+x=self.fo(2);
+x=self.fo(2,3,4);
+x=ID.fo(2,3,4);

@@ -1,0 +1,10 @@
+void Main::main() {
+	while (a==b) 
+	do {
+	x:=2;
+		while (a==b) 
+		do ;
+			x:=2;{}
+		
+			
+}

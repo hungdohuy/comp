@@ -1,0 +1,10 @@
+void Main::main() {
+	if (a==1) then
+	{
+		{{}}
+	}
+	else
+	{
+	}
+			
+}

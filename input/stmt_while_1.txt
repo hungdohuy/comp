@@ -1,0 +1,6 @@
+void Main::main() {
+	while (a==b) 
+	do {
+	x:=2;
+		}	
+}

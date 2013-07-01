@@ -1,0 +1,18 @@
+void Main::main() {
+	if (a==1) then
+	{
+	}
+	else
+	{
+		if true then a:=b ;
+		if a=b then c:=d
+				else if a=c then ;
+	}
+		
+	if a==1 then
+		if a==1 then{
+			a:=1;b:=2;
+		}
+		else
+			b:=1;
+}

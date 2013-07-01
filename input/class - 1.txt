@@ -1,0 +1,5 @@
+class A extends B{
+	a = 1; a = -1; a=+1; 
+	length:bool;
+}
+

@@ -1,0 +1,6 @@
+NameOfClass::Contructor(x:integer){
+	{
+	{}
+}
+	
+}
