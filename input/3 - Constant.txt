@@ -1,0 +1,5 @@
+a="fas";
+a:bool;a="snull";
+a=true;
+a=null;a:integer;
+a:float;
