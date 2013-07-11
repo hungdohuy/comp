@@ -1,0 +1,6 @@
+class x {
+void foo();
+}
+a:bool;
+m:integer;
+void x::foo() {if (a) then m:=1; else n:= 2;}  

@@ -1,1 +1,1 @@
-for /L %%i in (1,1,4) do driver testcases\test%%i.txt > testsol\%%i.txt 2> testsol\e%%i.txt
+for /L %%i in (1,1,10) do driver testcases\%%i.txt > testsol\%%i.txt 

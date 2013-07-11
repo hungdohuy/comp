@@ -1,0 +1,1 @@
+TypeMismatch In Statement: If a Then m:=1 Else n:=2
