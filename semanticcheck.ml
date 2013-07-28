@@ -121,7 +121,7 @@ and add_decl env decl  =
 		| VarDecl (id,typ) -> 	if (lookup_entry (id,(convert_type typ)) head) 
 								then raise (Redeclared_Variable id) 
 								else add_new_id env id (convert_type typ)
-		| ConstDecl ()
+	(*	| ConstDecl ()*)
 		| MethodDecl(rt,sc,id,dl,(lc,sl)) -> let env1 = enterScope env in
   											 let env2 = (try add_decl_list env1 dl
             								 with (Redeclared_Variable x) -> raise (Redeclared_Parameter x) ) in 
