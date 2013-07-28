@@ -1,2 +1,5 @@
-b=?;
-a="\r\n\t\b\f\"\\\g";
+a:integer;
+b:float;
+class c{
+	
+}

@@ -1,0 +1,27 @@
+
+class ClassA{
+	index:integer;
+	integer sum(a:integer);
+	ClassA(a:bool);
+}
+
+integer ClassA::sum(a:integer)
+{
+	{
+		a: integer;
+		{
+			c = 1;
+			{
+				c=2;
+				{
+					c := self.sum(1);		
+				}
+			}
+		}
+	}
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}

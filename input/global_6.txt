@@ -1,0 +1,13 @@
+class ClassA{
+	a:int;
+}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+class ClassA{
+	float sum(a:integer);
+}
+
+float ClassA::sum(a:integer)
+{
+
+}
+
+class ClassB extends ClassA{
+	ClassB(a:integer;b:bool);
+}
+
+ClassB::ClassB(a:integer;b:bool)
+{
+
+}
+
+ClassB::ClassB(a:integer;b:bool)
+{
+
+}

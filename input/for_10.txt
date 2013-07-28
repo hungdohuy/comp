@@ -1,0 +1,30 @@
+class ClassA{
+	integer sum(a:integer);
+	ClassA();
+	ClassA(a:bool);
+}
+
+integer ClassA::sum(a:integer)
+{
+	i:integer;
+	max:integer;
+	max2 :integer;
+	max := new ClassA().sum(1);
+	max2 := new ClassA(true).sum(1);
+	
+	for i:=1 to max do
+		i := 1;
+		
+	for i:=1 to max2 do
+		i := 1;
+}
+
+ClassA::ClassA()
+{
+
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}

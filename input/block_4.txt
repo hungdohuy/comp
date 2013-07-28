@@ -1,0 +1,28 @@
+
+class ClassA{
+	index:integer;
+	void sum(a:integer);
+}
+
+void ClassA::sum(a:integer)
+{
+	{
+		c = 1;
+		{
+			c = 2;
+			{
+				oneA:ClassA;
+				self.sum(c);
+				{
+					max:integer;
+					max:=10;
+					{
+						oneA.sum(max);
+					}
+				}
+			}
+		}
+		
+	}
+}
+

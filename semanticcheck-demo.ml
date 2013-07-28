@@ -119,41 +119,41 @@ and add_decl env decl  =
   | head::_ ->
   (match decl with
 		| VarDecl (id,typ) -> 
-			if (lookup id head) 
-				then raise (Redeclared_Variable id) 
-			else add_new_id env id (convert_type typ)
+				if (lookup id head) 
+					then raise (Redeclared_Variable id) 
+					else add_new_id env id (convert_type typ)
 		| ConstDecl (id, exp) ->  
-			let et = get_expr_type env exp in
-			if (lookup id head) 
+				let pt = get_expr_type env exp in
+				if (lookup id head) 
 				then raise (Redeclared_Constant id) 
-			else add_new_id env id et		
+				else add_new_id env id pt
+				
 		| ClassDecl (id,ext,dl) ->
-			if (ext <> "") 
-				then if not(lookup ext head) 
-					then raise (Undeclared_Class ext);
-			if (lookup id head) 
-				then raise (Redeclared_Class id);
-			let env1 = add_new_id env id (TypeClassDecl(id, ext)) in
-			let env2 = enterScope env1 in (
-				try	(
-					let child = add_decl_list env2 dl in 
-					let hdchild = (List.hd child) in
-					exitClass env1 hdchild
+				if(ext<> "") then (
+						if not(lookup ext head) then raise (Undeclared_Class ext)	
+				);
+				
+				if (lookup id head) then raise (Redeclared_Class id);
+				 
+				let env1 = add_new_id env id (TypeClassDecl(id, ext)) in
+				let env2 = enterScope env1 in 
+				(
+					try	(
+						
+						let child = add_decl_list env2 dl in 
+						let hdchild = (List.hd child) in
+						exitClass env1 hdchild
+					
+					)
+					with
+						| Redeclared_Constant id -> raise (Redeclared_Attribute id)
+  					| Redeclared_Variable id -> raise (Redeclared_Attribute id)
+  					| _ -> raise NeverHappen
 				)
-				with
-					| Redeclared_Constant id | Redeclared_Variable id -> raise (Redeclared_Attribute id)
-					| _ -> raise NeverHappen
-			)
 
-		| MethodDecl(rt,sc,id,dl,(lc,sl)) ->
-			let env1 = enterScope env in
-			let env2 = (
-				try add_decl_list env1 dl
-			 	with 
-			 	(Redeclared_Variable x) -> raise (Redeclared_Parameter x) 
-			) in 
-	 		let env3 = add_decl_list env2 lc in 
-	 			(check_all_on_list (check_decl_in_statement env3) sl;env)
+		| MethodDecl(rt,sc,id,dl,(lc,sl)) -> let env1 = enterScope env in
+											 let env2 = add_decl_list env1 lc in
+											 (check_all_on_list (check_decl_in_statement env2) sl;env)
 											
 		| _ -> env
     )
@@ -246,5 +246,4 @@ let ptbl env =
 						  
 (* check whole program *)
 let check_program dl =
-	(*let env = add_decl_list (initenv [[]]) dl in ptbl env; ()*)
- 	let _ = add_decl_list (initenv [[]]) dl in ()
+ let env = add_decl_list (initenv [[]]) dl in ptbl env; ()

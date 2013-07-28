@@ -1,0 +1,16 @@
+
+class ClassA{
+	
+	m:bool;
+	m = true;
+}
+
+
+
+
+
+
+
+
+
+

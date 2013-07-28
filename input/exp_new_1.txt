@@ -1,0 +1,11 @@
+class ClassA{
+	operator:bool;
+	float sum(a:integer);
+}
+
+float ClassA::sum(a:integer)
+{
+	oneA:ClassA;
+	oneA := new ClassA1();
+}
+

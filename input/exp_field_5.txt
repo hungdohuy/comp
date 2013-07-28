@@ -1,0 +1,18 @@
+class ClassA{
+	operator:bool;
+	integer sum(a:integer);
+	ClassA(a:bool);
+}
+
+integer ClassA::sum(a:integer)
+{
+	oneA:ClassA[5];
+	array:bool[5];
+	b:integer;
+	a := oneA[b.a].sum(1);
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}
