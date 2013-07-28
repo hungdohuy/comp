@@ -1,0 +1,4 @@
+a:integer;
+b:float;
+a:float;
+class a{}

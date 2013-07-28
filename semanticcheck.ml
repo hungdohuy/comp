@@ -97,6 +97,10 @@ and lookup id lst =
 		| [] -> false
 		| (id1,typ) ::tail -> if id = id1 then true else lookup id tail
 
+and lookup_entry (id,typ) lst =
+	match lst with
+	| [] -> false
+	| (id1,typ1)::tail  -> if (id = id1) && (typ = typ1)  then true else lookup_entry (id,typ) tail
 (* convert type type_expr -> ptype *)
 and convert_type type_expr =
 	match type_expr with
@@ -114,12 +118,14 @@ and add_decl env decl  =
   [] -> raise NeverHappen
   | head::_ ->
   (match decl with
-		| VarDecl (id,typ) -> 	if (lookup id head) 
+		| VarDecl (id,typ) -> 	if (lookup_entry (id,(convert_type typ)) head) 
 								then raise (Redeclared_Variable id) 
 								else add_new_id env id (convert_type typ)
+		| ConstDecl ()
 		| MethodDecl(rt,sc,id,dl,(lc,sl)) -> let env1 = enterScope env in
-											 let env2 = add_decl_list env1 lc in
-											 (check_all_on_list (check_decl_in_statement env2) sl;env)
+  											 let env2 = (try add_decl_list env1 dl
+            								 with (Redeclared_Variable x) -> raise (Redeclared_Parameter x) ) in 
+            								 let env3 = add_decl_list env2 lc in (check_all_on_list (check_decl_in_statement env3) sl;env)
 		| _ -> env
     )
 
