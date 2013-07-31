@@ -1,0 +1,10 @@
+class ClassA{
+	operator:bool;
+	float sum(a:integer);
+}
+
+float ClassA::sum(a:integer)
+{
+	self.operator := 1;
+}
+

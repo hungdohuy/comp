@@ -1,0 +1,23 @@
+class ClassA{
+	index:float;
+	float sum(a:integer);
+	ClassA(a:bool);
+}
+
+float ClassA::sum(i:integer)
+{
+	quitCondition:float;
+
+	repeat
+		if i>5 then
+		quitCondition := true;
+		else
+		i := i+1;
+	until quitCondition;
+	
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}

@@ -1,0 +1,15 @@
+
+class ClassA{
+	c = 1;
+	c = true;
+}
+
+
+
+
+
+
+
+
+
+

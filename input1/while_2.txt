@@ -1,0 +1,17 @@
+max:integer;
+class ClassA{
+	index:integer;
+	integer sum(a:integer);
+}
+
+integer ClassA::sum(a:integer)
+{
+	while true
+	do 
+	{
+		oneA:ClassA;
+		oneA:integer;
+		max:=self.sum(c);			
+	}
+}
+

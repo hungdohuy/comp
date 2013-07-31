@@ -1,0 +1,19 @@
+class ClassA{
+	index:float;
+	float sum(a:integer);
+	ClassA(a:bool);
+}
+
+float ClassA::sum(a:integer)
+{
+	i:integer;
+	f:float;
+	for i:=1 to f do
+		i := i;
+	
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}

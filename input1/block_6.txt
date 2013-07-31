@@ -1,0 +1,33 @@
+max:integer;
+class ClassA{
+	index:integer;
+	void sum(a:integer);
+}
+
+void ClassA::sum(a:integer)
+{
+	{
+		c = 1;
+		{
+			c = 2;
+			{
+				oneA:ClassA;
+				self.sum(c);
+				{
+					if(c==2) then
+					{
+						max := c;
+						oneA.sum(max);
+					}
+					else
+					{
+						min:float;
+						oneA.sum(min);
+					}
+				}
+			}
+		}
+		
+	}
+}
+

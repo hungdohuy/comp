@@ -1,0 +1,15 @@
+
+class ClassA
+{
+	ClassA(a:bool);
+	ClassA(a:bool);
+} 
+
+
+
+
+
+
+
+
+

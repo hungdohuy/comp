@@ -1,0 +1,16 @@
+class ClassA{
+	index:integer;
+	float sum(a:integer);
+	ClassA(a:bool);
+}
+
+float ClassA::sum(a:integer)
+{
+	oneA:ClassA[5];
+	oneA[self.index].sum(1);
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}

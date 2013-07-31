@@ -1,0 +1,8 @@
+class ClassA{
+	ClassA(a:integer;b:integer);
+}
+
+ClassA::ClassA(a:integer;b:float)
+{
+
+}

@@ -1,0 +1,14 @@
+
+class ClassA
+{
+	integer var(a:integer; a:float);
+} 
+
+
+
+
+
+
+
+
+

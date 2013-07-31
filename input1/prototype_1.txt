@@ -1,0 +1,19 @@
+
+class ClassA
+{
+	float var(a:float);
+	string var(a:string);
+	integer var(a:integer;b:float);
+	integer var(a:bool);
+	integer var(a:string[5]);
+
+} 
+
+
+
+
+
+
+
+
+

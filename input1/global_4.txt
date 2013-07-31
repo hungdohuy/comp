@@ -1,0 +1,15 @@
+var:integer;
+class ClassA{
+}
+var:integer;
+
+
+
+
+
+
+
+
+
+
+

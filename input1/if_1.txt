@@ -1,0 +1,25 @@
+class ClassA{
+	index:float;
+	float sum(a:integer);
+	ClassA(a:bool);
+}
+
+float ClassA::sum(a:integer)
+{
+	if true then a := 1;
+	if a==1 then a := 1;
+	if a<>1 then a := 1;	
+	if false then a := 1;
+	if !true then a := 1;
+	if (a+1==0) then a := 1;
+	if (a\1>1.1) then a := 1;
+	if (a<0) then a := 1;
+	if (a>0) then a := 1;
+	if (a<=0) then a := 1;
+	if (a>=0) then a := 1;
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}

@@ -1,0 +1,10 @@
+class ClassA{
+	float sum(a:integer);
+}
+
+float ClassA::sum(a:integer)
+{
+	a := 1.1/1;
+	a := 1/1.1;
+}
+

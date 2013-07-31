@@ -1,3 +1,4 @@
+
 class ClassA{
 	index:integer;
 	integer sum(a:integer);
@@ -18,4 +19,9 @@ integer ClassA::sum(a:integer)
 			}
 		}
 	}
+}
+
+ClassA::ClassA(a:bool)
+{
+
 }

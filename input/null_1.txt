@@ -1,0 +1,11 @@
+
+class ClassA{
+	integer sum(a:float);
+}
+
+
+integer ClassA::sum(a:float)
+{
+	b:ClassA[5];
+	b[1] := null;
+}

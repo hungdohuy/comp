@@ -1,0 +1,18 @@
+class ClassA{
+	integer sum(a:integer);
+	ClassA(a:bool);
+}
+
+integer ClassA::sum(a:integer)
+{
+	oneA:ClassA;
+	b:ClassA;
+	b := self;
+	
+	return 1.1;
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}

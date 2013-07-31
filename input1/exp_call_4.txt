@@ -1,0 +1,16 @@
+class ClassA{
+	operator:bool;
+	float sum(a:integer);
+	ClassA(a:bool);
+}
+
+float ClassA::sum(a:integer)
+{
+	oneA:ClassA;
+	a := oneA.sum(1.1);
+}
+
+ClassA::ClassA(a:bool)
+{
+
+}

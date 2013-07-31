@@ -1,0 +1,25 @@
+(*a:string[5];
+
+class abc{
+	a1:integer;
+	abc();
+}
+instance:abc;
+class B{}
+abc::abc(){
+	instance:=new abc();
+}*)
+
+class ClassA{
+ 
+ integer a(a:float;b:ClassA);
+ ClassA b(a:integer;b:ClassA);
+}
+
+ClassA ClassA::sum(a:integer;b:ClassA)
+{
+}
+integer ClassA::sum(a:float;b:ClassA)
+{
+ 
+}

@@ -1,0 +1,3 @@
+class ClassA{
+	ClassA(a:integer);
+}

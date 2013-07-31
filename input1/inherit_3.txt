@@ -1,0 +1,29 @@
+
+class ClassA{
+	integer sum(a:integer);
+}
+
+class ClassB extends ClassA{
+	
+}
+
+class ClassC extends ClassB{
+	integer sum(a:float);
+}
+
+class ClassD extends ClassC{
+	
+}
+
+
+integer ClassA::sum(a:integer)
+{
+	
+	one:ClassD;
+	a := one.sum(1.1);
+}
+
+integer ClassC::sum(a:float)
+{
+	
+}

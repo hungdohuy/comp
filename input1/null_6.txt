@@ -1,0 +1,11 @@
+
+class ClassA{
+	ClassA sum(b:ClassA);
+}
+
+ClassA ClassA::sum(b:ClassA)
+{
+	a:ClassA;
+	a := null;
+	b := a;
+}

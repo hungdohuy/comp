@@ -1,0 +1,10 @@
+
+class ClassA{
+	ClassA sum(b:ClassA);
+}
+
+ClassA ClassA::sum(b:ClassA)
+{
+	oneA:ClassA;
+	oneA := self.sum(null);
+}
