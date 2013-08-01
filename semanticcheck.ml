@@ -44,7 +44,7 @@ let rec match_type t1 t2 =
 		| (TypeArray(a1,i1),TypeArray(b1,i2)) -> if ((a1 = b1)&&(i1=i2)) then true else false
 		| (TypeClass(id1),TypeClass(id2)) -> if (id1=id2) then true else false
 		| (TypeClassDecl(id1,ext1),TypeClassDecl(id2,ext2)) -> if (id1=id2) then true else false
-		| (TypeClass(id1),TypeClassDecl(id2,ext)) -> if (id1=id2) then true else false
+		| (TypeClass(id1),TypeClassDecl(id2,ext)) -> if ((id1=id2)||(id1=ext)) then true else false
 		| (_,_) -> false
 									 
 
@@ -124,7 +124,8 @@ and get_expr_type env e =
 				else raise (Type_Mismatch_In_Expression e)
 		|IDiv | Mod -> if (et1=TypeInt && et1=et2) then TypeInt else raise (Type_Mismatch_In_Expression e)
 		| And | Or -> if (et1=TypeBool && et1=et2) then TypeBool else raise (Type_Mismatch_In_Expression e) 
-		| Eq | Neq -> if (et1=et2 && et1<>TypeVoid) then TypeBool else raise (Type_Mismatch_In_Expression e)
+		| Eq | Neq -> if ((et1=et2) && ((et1==TypeInt)||(et1==TypeBool))) 
+						then TypeBool else raise (Type_Mismatch_In_Expression e)
 		| Ge | Gt | Le | Lt -> if ((et1=TypeInt||et1=TypeFloat) && (et2=TypeInt || et2=TypeFloat))
 								then TypeBool else raise (Type_Mismatch_In_Expression e)
 		|Concat -> if (et1=et2 && et1=TypeString) then TypeString 
@@ -136,6 +137,7 @@ and get_expr_type env e =
 			match rt with
 			| TypeClassDecl(id1,ext) -> TypeClassDecl(id1,ext)
 			| _ -> raise (Type_Mismatch_In_Expression e)
+
 			)
 		)	
 		with
@@ -221,6 +223,10 @@ and check_decl_in_statement env st =
 	|Block(dl,sl) -> let env1 = add_decl_list (enter_scope env) dl in(
 						(check_all_on_list (check_decl_in_statement env1) sl)
 					)
+	|IfThen(e,s) -> let t = get_expr_type env e in 
+					 if (t = TypeBool) 
+					 then (check_decl_in_statement env s) 
+					 else raise (Type_Mismatch_In_Statement st)
 	|IfThenElse (e,s1,s2) -> let t = get_expr_type env e in 
 							 if (t = TypeBool) 
 							 then ((check_decl_in_statement env s1);(check_decl_in_statement env s2)) 
@@ -229,7 +235,12 @@ and check_decl_in_statement env st =
 					let lt = get_lvalue_type env l in 
 					if (not (match_type lt rt)) 
 					then raise (Type_Mismatch_In_Statement st)		 
-	|_ -> ()
+	|While(e,s) -> let t = get_expr_type env e in 
+					 if (t = TypeBool) 
+					 then (check_decl_in_statement env s) 
+					 else raise (Type_Mismatch_In_Statement st)
+(* 	|Repeat(sl,e) -> 
+ *)	|_ -> ()
 			
 (* add all declarations in a list into the enviroment *)
 and add_decl_list env  decl_list =
@@ -298,5 +309,5 @@ let ptbl env =
 						  
 (* check whole program *)
 let check_program dl =
-(* 	let env = add_decl_list (initenv [[]]) dl in ptbl env; () *)
- 	let _ = add_decl_list (initenv [[]]) dl in ()
+	let env = add_decl_list (initenv [[]]) dl in ptbl env; ()
+(*  	let _ = add_decl_list (initenv [[]]) dl in () *)

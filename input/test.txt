@@ -1,21 +1,23 @@
-class ClassA{
-	index:integer;
-	integer sum(a:integer);
-	ClassA(a:bool);
+class b{
+	b();
+}
+class a extends b{
+	a();
+}
+class c extends a{
+	c();
+}
+b1:b;
+a1:a;
+c1:c;
+a::a(){
+	a1:=new a();
 }
 
-integer ClassA::sum(a:integer)
-{
-	{
-		a: integer;
-		{
-			c = 1;
-			{
-				c=2;
-				{
-					c := self.sum(1);		
-				}
-			}
-		}
-	}
+b::b(){
+	b1:=new a();
+}
+
+c::c(){
+	c1:=new c();
 }
