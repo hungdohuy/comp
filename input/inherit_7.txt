@@ -1,0 +1,24 @@
+
+class A{
+	A sum();
+}
+
+
+class B extends A{
+
+}
+class C extends B{
+
+}
+class D extends C{
+	
+}
+
+A A::sum()
+{
+	a:A;
+	b:B;
+	d:D;
+	return d;
+}
+

@@ -1,8 +1,9 @@
+
 class ClassA{
-	a:int;
+	
 }
 
-
+ClassA:ClassA;
 
 
 

@@ -1,7 +1,0 @@
-class ClassA{
-	
-	float sum(a:integer;b:integer);
-	float sum(a:integer;b:float);
-}
-
-

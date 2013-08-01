@@ -1,5 +1,7 @@
+
 class ClassA{
-	a:int;
+	var:integer;
+	var:int;
 }
 
 

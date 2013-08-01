@@ -9,6 +9,7 @@ void ClassA::sum(a:integer)
 	{
 		c = 1;
 		{
+			ClassA:ClassA;
 			c = 2;
 			{
 				oneA:ClassA;

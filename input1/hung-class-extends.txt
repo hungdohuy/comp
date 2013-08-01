@@ -1,4 +1,0 @@
-class a extends b{
-	a:integer;
-	b=a[5+5*4-1];
-}

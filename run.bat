@@ -2,5 +2,5 @@
 @echo off
 ::cat test.txt & echo.
 ::echo ----------------------
-driver input\test.txt
+driver test.txt
 ::echo ----------------------

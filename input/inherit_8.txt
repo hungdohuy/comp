@@ -1,0 +1,17 @@
+
+class A{
+	
+}
+
+
+class B extends A{
+	B sum();
+}
+
+B B::sum()
+{
+	a:A;
+	b:B;
+	return b;
+}
+

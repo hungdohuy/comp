@@ -1,0 +1,10 @@
+
+class A{
+	A sum();
+}
+
+ClassA A::sum()
+{
+	
+}
+

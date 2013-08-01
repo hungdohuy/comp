@@ -1,0 +1,13 @@
+class A{
+	A sum(a:A);
+}
+class B extends A
+{
+}
+
+A A::sum(a:A)
+{
+	b:B;
+	a:= b.sum(b);
+}
+

@@ -1,4 +1,0 @@
-class a{
-	a:integer;
-	b:int[5];
-}

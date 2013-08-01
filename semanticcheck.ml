@@ -79,15 +79,15 @@ and check_all_on_list f pl =
 and get_lvalue_type env l =
 	match l with
 	| Id i -> (get_decl_type env i)
-	| Member(e1,e2) as x-> let et1 = get_expr_type env e1 in
+	| Member(e1,e2) -> let et1 = get_expr_type env e1 in
 						let et2 = get_expr_type env e2 in(
-						if (et2<>TypeInt) then raise (Type_Mismatch_In_Expression (Lhs(x)));
+						if (et2<>TypeInt) then raise (Type_Mismatch_In_Expression (Lhs(l)));
 							(match et1 with
 							| TypeArray(pt,_) -> pt
-							| _ -> raise (Type_Mismatch_In_Expression (Lhs(x)))
+							| _ -> raise (Type_Mismatch_In_Expression (Lhs(l)))
 							)
 						)
-	(* | Field(e,id) -> let et = get_expr_type env e in
+(* 	| Field(e,id) -> let et = get_expr_type env e in
 						if (et = (TypeClass "Self")) *)
 	| _ -> TypeInt
 
@@ -137,7 +137,6 @@ and get_expr_type env e =
 			match rt with
 			| TypeClassDecl(id1,ext) -> TypeClassDecl(id1,ext)
 			| _ -> raise (Type_Mismatch_In_Expression e)
-
 			)
 		)	
 		with
@@ -151,6 +150,10 @@ and lookup id lst =
 		| [] -> false
 		| (id1,typ) ::tail -> if id = id1 then true else lookup id tail
 
+and lookup_class id lst =
+	match lst with
+		| [] -> raise (Undeclared_Class id)
+		| (id1,typ) ::tail -> if id = id1 then () else lookup_class id tail
 (* convert type type_expr -> ptype *)
 and convert_type type_expr =
 	match type_expr with
@@ -161,23 +164,37 @@ and convert_type type_expr =
 	| VoidType -> TypeVoid
 	| ArrayType (t,n) -> TypeArray ((convert_type t), n) 
 	| ClassType s -> TypeClass s
-	
+
 (* add a declaration into the environment *)
 and add_decl env decl  =
  match env with 
   [] -> raise NeverHappen
   | head::_ ->
   (match decl with
-		| VarDecl (id,typ) -> 
-			if (lookup id head) 
+		| VarDecl (id,typ) -> ( 
+			match typ with
+			| ClassType x -> let _ = (lookup_class x head) in 
+									(add_new_id env id (convert_type typ))
+			| _ ->	if (lookup id head) 
+						then raise (Redeclared_Variable id)
+					else add_new_id env id (convert_type typ)
+			(* if (lookup id head) 
 				then raise (Redeclared_Variable id) 
-			else add_new_id env id (convert_type typ)
-		| ConstDecl (id, exp) ->  
+			(* else add_new_id env id (convert_type typ) *)
+			else (
+				match typ with
+				| ClassType x -> let _ = (lookup_class x head) in 
+									(add_new_id env id (convert_type typ))
+				|_ -> add_new_id env id (convert_type typ)
+			) *)
+		)
+		| ConstDecl (id, exp) ->(  
 			let et = get_expr_type env exp in
 			if (lookup id head) 
 				then raise (Redeclared_Constant id) 
 			else add_new_id env id et		
-		| ClassDecl (id,ext,dl) ->
+		)
+		| ClassDecl (id,ext,dl) ->(
 			if (ext <> "") 
 				then if not(lookup ext head) 
 					then raise (Undeclared_Class ext);
@@ -192,9 +209,10 @@ and add_decl env decl  =
 				)
 				with
 					| Redeclared_Constant id | Redeclared_Variable id -> raise (Redeclared_Attribute id)
+					| Undeclared_Class id -> raise (Undeclared_Class id)
 					| _ -> raise NeverHappen
 			)
-
+		)
 	(* 	| MethodProDecl(rt,id,dl) -> *)
 			
 
@@ -239,8 +257,27 @@ and check_decl_in_statement env st =
 					 if (t = TypeBool) 
 					 then (check_decl_in_statement env s) 
 					 else raise (Type_Mismatch_In_Statement st)
-(* 	|Repeat(sl,e) -> 
- *)	|_ -> ()
+	|Repeat(sl,e) -> let et = get_expr_type env e in( 
+						if (et<>TypeBool) then raise (Type_Mismatch_In_Statement st);
+						(check_all_on_list (check_decl_in_statement env) sl)
+					)
+	|For(var,e1,b,e2,st1) ->( try(
+								let vt = get_decl_type env var in
+								let et1 = get_expr_type env e1 in
+								let et2 = get_expr_type env e2 in
+								if (vt=TypeInt && et1=TypeInt && et2=TypeInt)
+									then check_decl_in_statement env st1
+								else raise (Type_Mismatch_In_Statement st)
+								)
+							with
+							|_ -> raise (Type_Mismatch_In_Statement st)
+							)
+	|Return(e) -> (try
+					let _ = get_expr_type env e in ()
+				with
+				| _ -> raise (Type_Mismatch_In_Statement st)
+				)
+	|_ -> ()
 			
 (* add all declarations in a list into the enviroment *)
 and add_decl_list env  decl_list =
@@ -309,5 +346,5 @@ let ptbl env =
 						  
 (* check whole program *)
 let check_program dl =
-	let env = add_decl_list (initenv [[]]) dl in ptbl env; ()
-(*  	let _ = add_decl_list (initenv [[]]) dl in () *)
+(* 	let env = add_decl_list (initenv [[]]) dl in ptbl env; () *)
+ 	let _ = add_decl_list (initenv [[]]) dl in ()

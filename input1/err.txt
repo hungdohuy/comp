@@ -1,5 +1,0 @@
-a::A(){
-	a:float;
-		b:bool;
-	a:=1;
-}

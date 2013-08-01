@@ -1,0 +1,11 @@
+class ClassA{
+	integer sum(a:integer[5]);
+}
+
+integer ClassA::sum(a:integer[1])
+{
+	index:integer;
+	value:integer;
+	value := a[index];
+}
+
