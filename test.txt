@@ -1,13 +1,16 @@
 class ClassA{
-	a:int;
+	float sum(a:integer);
+	ClassA(a:bool);
 }
 
+float ClassA::sum(a:integer)
+{
+	oneA:ClassA;
+	b:ClassA;
+	b := self;
+}
 
+ClassA::ClassA(a:bool)
+{
 
-
-
-
-
-
-
-
+}

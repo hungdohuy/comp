@@ -28,6 +28,10 @@ let get_const_type c =
 (* invoked when entering a scope *)
 let enter_scope env = []::env
 
+let find_global_scope env =
+	let l = List.length env in
+	if (l=0) then raise NeverHappen;
+	List.nth env (l-1)
 
 (* match_type: match type of right hand side to left hand side *)
 (* t1: type of lhs *)
@@ -154,6 +158,7 @@ and lookup_class id lst =
 	match lst with
 		| [] -> raise (Undeclared_Class id)
 		| (id1,typ) ::tail -> if id = id1 then () else lookup_class id tail
+
 (* convert type type_expr -> ptype *)
 and convert_type type_expr =
 	match type_expr with
@@ -173,20 +178,25 @@ and add_decl env decl  =
   (match decl with
 		| VarDecl (id,typ) -> ( 
 			match typ with
-			| ClassType x -> let _ = (lookup_class x head) in 
-									(add_new_id env id (convert_type typ))
+			|ClassType x ->	let genv = (find_global_scope env) in
+							let _ = (lookup_class x genv) in 
+							if (lookup id head) 
+								then raise (Redeclared_Variable id)
+							else add_new_id env id (convert_type typ)
+			|ArrayType (typ,n) -> (
+				match typ with
+				|ClassType x ->	let genv = (find_global_scope env) in
+								let _ = (lookup_class x genv) in 
+								if (lookup id head) 
+									then raise (Redeclared_Variable id)
+								else add_new_id env id (convert_type typ)
+				|_ 	-> 	if (lookup id head) 
+							then raise (Redeclared_Variable id)
+						else add_new_id env id (convert_type typ)
+			)
 			| _ ->	if (lookup id head) 
 						then raise (Redeclared_Variable id)
 					else add_new_id env id (convert_type typ)
-			(* if (lookup id head) 
-				then raise (Redeclared_Variable id) 
-			(* else add_new_id env id (convert_type typ) *)
-			else (
-				match typ with
-				| ClassType x -> let _ = (lookup_class x head) in 
-									(add_new_id env id (convert_type typ))
-				|_ -> add_new_id env id (convert_type typ)
-			) *)
 		)
 		| ConstDecl (id, exp) ->(  
 			let et = get_expr_type env exp in
@@ -319,18 +329,18 @@ let initenv env =
 					  
 let rec string_of_type pt = 
 match pt with
-	| TypeInt 	-> "Int"
-	| TypeFloat -> "Float"
-	| TypeBool 	-> "Bool"
-	| TypeString -> "String"
-	| TypeArray (_,size) -> "Array " ^ "[" ^ (string_of_int size) ^"]"  
-	| TypeUnion (t1,t2) -> "Union ("^(string_of_type t1)^","^(string_of_type t2)^")"  
-	| TypeFunc (t1,t2) -> "Func ("^(string_of_type t1)^") => "^(string_of_type t2)
-	| TypeMethod (t1,t2) -> "Method ("^(string_of_type t1)^") => "^(string_of_type t2)
-	| TypeVoid -> "Void"
-	| TypeClass name ->  "Class (" ^ name ^")"
-	| TypeClassDecl (name,ext) ->  "ClassDecl (" ^ name ^ " : " ^ ext ^")"
-	| TypeNull ->  "Null"
+	| TypeInt 	-> "TypeInt"
+	| TypeFloat -> "TypeFloat"
+	| TypeBool 	-> "TypeBool"
+	| TypeString -> "TypeString"
+	| TypeArray (_,size) -> "TypeArray " ^ "[" ^ (string_of_int size) ^"]"  
+	| TypeUnion (t1,t2) -> "TypeUnion ("^(string_of_type t1)^","^(string_of_type t2)^")"  
+	| TypeFunc (t1,t2) -> "TypeFunc ("^(string_of_type t1)^") -> "^(string_of_type t2)
+	| TypeMethod (t1,t2) -> "TypeMethod ("^(string_of_type t1)^") -> "^(string_of_type t2)
+	| TypeVoid -> "TypeVoid"
+	| TypeClass name ->  "TypeClass (" ^ name ^")"
+	| TypeClassDecl (name,ext) ->  "TypeClassDecl (" ^ name ^ " : " ^ ext ^")"
+	| TypeNull ->  "TypeNull"
 		
 let ptbl env = 
 	Printf.printf "SCOPE LV 0\n\n";
@@ -346,5 +356,5 @@ let ptbl env =
 						  
 (* check whole program *)
 let check_program dl =
-(* 	let env = add_decl_list (initenv [[]]) dl in ptbl env; () *)
+	(* let env = add_decl_list (initenv [[]]) dl in ptbl env; () *)
  	let _ = add_decl_list (initenv [[]]) dl in ()
