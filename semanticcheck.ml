@@ -1,3 +1,6 @@
+(* Semantic check *)
+(* Your name: 	DO HUY HUNG  *)
+(* Your id: 	PUFMINF1204    *)
 open Ast;;
 open Error;;
 open Pp;;
@@ -47,9 +50,6 @@ let rec match_type t1 t2 =
 		| (TypeUnion(a1,a2),TypeUnion(b1,b2)) -> if ((match_type a1 b1)&& (match_type a2 b2)) then true else false
 		| (TypeFunc(a1,_),TypeFunc(b1,_)) -> if (match_type a1 b1) then true else false
 		| (TypeArray(a1,i1),TypeArray(b1,i2)) -> if ((a1 = b1)&&(i1=i2)) then true else false
-		| (TypeClass(id1),TypeClass(id2)) -> if (id1=id2) then true else false
-		| (TypeClassDecl(id1,ext1),TypeClassDecl(id2,ext2)) -> if (id1=id2) then true else false
-		| (TypeClass(id1),TypeClassDecl(id2,ext)) -> if ((id1=id2)||(id1=ext)) then true else false
 		| (_,_) -> false
 									 
 
@@ -92,9 +92,18 @@ and get_lvalue_type env l =
 							| _ -> raise (Type_Mismatch_In_Expression (Lhs(l)))
 							)
 						)
-(* 	| Field(e,id) -> let et = get_expr_type env e in
-						if (et = (TypeClass "Self")) *)
-	| _ -> TypeInt
+	| Field(e,id) -> let et = get_expr_type env e in(
+						match et with
+						| TypeClass x ->(try(
+							let genv = (find_global_scope env) in
+							let c = get_decl_type env (x^"."^id) in
+							if (lookup (x^"."^id) genv) then c
+								else raise (Undeclared_Identifier id)
+							)with
+							|_	-> raise (Undeclared_Attribute id)
+						)
+						| _ -> raise (Type_Mismatch_In_Expression (Lhs(l)))
+					)
 
 (* return a type of a list of expression *)	
 and get_expr_list_type env el = 
@@ -137,10 +146,10 @@ and get_expr_type env e =
 					else raise (Type_Mismatch_In_Expression e)
 		)
 	|New(id,le) ->(
-		try(
+		try( 
 			let rt = get_decl_type env id in(
 			match rt with
-			| TypeClassDecl(id1,ext) -> TypeClassDecl(id1,ext)
+			| TypeClassDecl(id1,ext) -> TypeClass(id1)
 			| _ -> raise (Type_Mismatch_In_Expression e)
 			)
 		)	
@@ -170,8 +179,8 @@ and get_parents_class env id pl =
 	| [] -> pl
 	| (id1,typ)::tail -> (
 			match typ with
-			| TypeClassDecl(id1,b) -> if (id=id1) then (get_parents_class tail b (b::pl))
-										else (get_parents_class tail b pl)
+			| TypeClassDecl(id1,b) -> if ((id=id1) && (b<>"")) then (get_parents_class tail b (b::pl))
+										else (get_parents_class tail id pl)
 			| _ -> (get_parents_class tail id pl)
 	)
 (* convert type type_expr -> ptype *)
@@ -183,8 +192,7 @@ and convert_type type_expr =
 	| BoolType -> TypeBool
 	| VoidType -> TypeVoid
 	| ArrayType (t,n) -> TypeArray ((convert_type t), n) 
-	| ClassType s -> TypeClass s
-
+	| ClassType s ->  TypeClass s
 (* add a declaration into the environment *)
 and add_decl env decl  =
  match env with 
@@ -238,9 +246,32 @@ and add_decl env decl  =
 					| _ -> raise NeverHappen
 			)
 		)
-	(* 	| MethodProDecl(rt,id,dl) -> *)
-			
-
+(* 		| MethodProDecl(rt,id,dl) ->(
+			match rt with
+			|ClassType x ->	let genv = (find_global_scope env) in
+							let _ = (lookup_class x genv) in 
+							if (lookup id head) 
+								then raise (Redeclared_Variable id)
+							else add_new_id env id ((TypeFunc(((List.hd dl)),(convert_type rt))))
+			|ArrayType (rt,n) -> (
+				match rt with
+				|ClassType x ->	let genv = (find_global_scope env) in
+								let _ = (lookup_class x genv) in 
+								if (lookup id head) 
+									then raise (Redeclared_Variable id)
+								else let list_param = add_decl_list env dl in 
+								add_new_id env id ((TypeFunc((get_parameters list_param),(convert_type rt))))
+				|_ 	-> 	if (lookup id head) 
+							then raise (Redeclared_Variable id)
+						else let list_param = add_decl_list env dl in 
+								add_new_id env id ((TypeFunc((get_parameters list_param),(convert_type rt))))
+			)
+			| _ ->	if (lookup id head) 
+						then raise (Redeclared_Variable id)
+					else let list_param = add_decl_list env dl in 
+								add_new_id env id ((TypeFunc((get_parameters list_param),(convert_type rt))))
+		)
+		 *)	
 		| MethodDecl(rt,sc,id,dl,(lc,sl)) ->
 			let env1 = enter_scope env in
 			let env2 = (
@@ -270,21 +301,19 @@ and check_decl_in_statement env st =
 					 if (t = TypeBool) 
 					 then (check_decl_in_statement env s) 
 					 else raise (Type_Mismatch_In_Statement st)
+
 	|IfThenElse (e,s1,s2) -> let t = get_expr_type env e in 
 							 if (t = TypeBool) 
 							 then ((check_decl_in_statement env s1);(check_decl_in_statement env s2)) 
 							 else raise (Type_Mismatch_In_Statement st)
-	(* |Assign(l,e) -> let rt = get_expr_type env e in 
-					let lt = get_lvalue_type env l in 
-					if (not (match_type lt rt)) 
-					then raise (Type_Mismatch_In_Statement st) *)		 
+
 	|Assign(l,e)	->	let rt = get_expr_type env e in
 						let lt = get_lvalue_type env l in(
 							match (lt,rt) with
 							| (TypeClass(a),TypeClass(b))	->(
 								let genv = (find_global_scope env) in
 								let pl = get_parents_class genv b [] in
-								if (lookup_parent a pl) then ()
+								if ((lookup_parent a pl)||(b="?null")) then ()
 									else raise (Type_Mismatch_In_Statement st)
 							)
 							| _ -> if (not (match_type lt rt)) 
@@ -294,6 +323,7 @@ and check_decl_in_statement env st =
 					 if (t = TypeBool) 
 					 then (check_decl_in_statement env s) 
 					 else raise (Type_Mismatch_In_Statement st)
+
 	|Repeat(sl,e) -> let et = get_expr_type env e in( 
 						if (et<>TypeBool) then raise (Type_Mismatch_In_Statement st);
 						(check_all_on_list (check_decl_in_statement env) sl)
@@ -383,5 +413,5 @@ let ptbl env =
 						  
 (* check whole program *)
 let check_program dl =
-(* 	let env = add_decl_list (initenv [[]]) dl in ptbl env; () *)
+	(* let env = add_decl_list (initenv [[]]) dl in ptbl env; () *)
  	let _ = add_decl_list (initenv [[]]) dl in ()

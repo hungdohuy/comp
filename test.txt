@@ -1,24 +1,4 @@
-
-class A{
-	void sum();
+class ClassA{
+	ClassA(a:integer);
+	ClassA(a:integer);
 }
-
-
-class B extends A{
-
-}
-class C extends B{
-
-}
-class D extends C{
-	
-}
-
-void A::sum()
-{
-	a:A;
-	b:B;
-	d:D;
-	d := b;
-}
-
