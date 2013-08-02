@@ -28,6 +28,7 @@ let get_const_type c =
 (* invoked when entering a scope *)
 let enter_scope env = []::env
 
+
 let find_global_scope env =
 	let l = List.length env in
 	if (l=0) then raise NeverHappen;
@@ -82,7 +83,7 @@ and check_all_on_list f pl =
 (* return a type of a lvalue *)
 and get_lvalue_type env l =
 	match l with
-	| Id i -> (get_decl_type env i)
+	| Id i -> (get_decl_type env i) 
 	| Member(e1,e2) -> let et1 = get_expr_type env e1 in
 						let et2 = get_expr_type env e2 in(
 						if (et2<>TypeInt) then raise (Type_Mismatch_In_Expression (Lhs(l)));
@@ -106,14 +107,14 @@ and get_expr_list_type env el =
 (* return a type of an expression *)
 and get_expr_type env e =
 	match e with
-	| Self -> TypeClass "Self"
-    | Lit c -> get_const_type c
-  	| Lhs l -> get_lvalue_type env l
-  	| Unary (uop,e1) -> let et = get_expr_type env e1 in
-					(match uop with  
-					NotOp -> if et = TypeBool then TypeBool else raise (Type_Mismatch_In_Expression e)
-					| _ -> if (et = TypeInt || et = TypeFloat) then et else raise (Type_Mismatch_In_Expression e)
-					)
+	| Self	->	TypeClass "Self"
+    | Lit c ->	get_const_type c
+  	| Lhs l ->	get_lvalue_type env l
+  	| Unary (uop,e1)	->	let et = get_expr_type env e1 in (
+  							match uop with  
+							NotOp	->	if et = TypeBool then TypeBool else raise (Type_Mismatch_In_Expression e)
+							| _	->	if (et = TypeInt || et = TypeFloat) then et else raise (Type_Mismatch_In_Expression e)
+							)
 	| Binary (biop,e1,e2) ->
 		let et1 = get_expr_type env e1 in
 		let et2 = get_expr_type env e2 in(
@@ -159,6 +160,20 @@ and lookup_class id lst =
 		| [] -> raise (Undeclared_Class id)
 		| (id1,typ) ::tail -> if id = id1 then () else lookup_class id tail
 
+and lookup_parent id lst =
+	match lst with
+	| [] -> false
+	| head::tail -> if (id=head) then true else lookup_parent id tail
+
+and get_parents_class env id pl = 
+	match env with
+	| [] -> pl
+	| (id1,typ)::tail -> (
+			match typ with
+			| TypeClassDecl(id1,b) -> if (id=id1) then (get_parents_class tail b (b::pl))
+										else (get_parents_class tail b pl)
+			| _ -> (get_parents_class tail id pl)
+	)
 (* convert type type_expr -> ptype *)
 and convert_type type_expr =
 	match type_expr with
@@ -215,7 +230,7 @@ and add_decl env decl  =
 				try	(
 					let child = add_decl_list env2 dl in 
 					let hdchild =(List.rev (List.hd child)) in
-					exitClass env1 hdchild
+					exit_scope env1 hdchild
 				)
 				with
 					| Redeclared_Constant id | Redeclared_Variable id -> raise (Redeclared_Attribute id)
@@ -259,10 +274,22 @@ and check_decl_in_statement env st =
 							 if (t = TypeBool) 
 							 then ((check_decl_in_statement env s1);(check_decl_in_statement env s2)) 
 							 else raise (Type_Mismatch_In_Statement st)
-	|Assign(l,e) -> let rt = get_expr_type env e in 
+	(* |Assign(l,e) -> let rt = get_expr_type env e in 
 					let lt = get_lvalue_type env l in 
 					if (not (match_type lt rt)) 
-					then raise (Type_Mismatch_In_Statement st)		 
+					then raise (Type_Mismatch_In_Statement st) *)		 
+	|Assign(l,e)	->	let rt = get_expr_type env e in
+						let lt = get_lvalue_type env l in(
+							match (lt,rt) with
+							| (TypeClass(a),TypeClass(b))	->(
+								let genv = (find_global_scope env) in
+								let pl = get_parents_class genv b [] in
+								if (lookup_parent a pl) then ()
+									else raise (Type_Mismatch_In_Statement st)
+							)
+							| _ -> if (not (match_type lt rt)) 
+									then raise (Type_Mismatch_In_Statement st)
+						)
 	|While(e,s) -> let t = get_expr_type env e in 
 					 if (t = TypeBool) 
 					 then (check_decl_in_statement env s) 
@@ -304,7 +331,7 @@ and add_items env name lst =
 			add_items env1 name tl
 		
 	
-and exitClass env lst = 
+and exit_scope env lst = 
 		let hdEnv = List.hd env in
 		let (name,pt) = List.hd hdEnv in 
   			add_items env name lst
@@ -356,5 +383,5 @@ let ptbl env =
 						  
 (* check whole program *)
 let check_program dl =
-	(* let env = add_decl_list (initenv [[]]) dl in ptbl env; () *)
+(* 	let env = add_decl_list (initenv [[]]) dl in ptbl env; () *)
  	let _ = add_decl_list (initenv [[]]) dl in ()

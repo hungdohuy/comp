@@ -1,16 +1,24 @@
-class ClassA{
-	float sum(a:integer);
-	ClassA(a:bool);
+
+class A{
+	void sum();
 }
 
-float ClassA::sum(a:integer)
+
+class B extends A{
+
+}
+class C extends B{
+
+}
+class D extends C{
+	
+}
+
+void A::sum()
 {
-	oneA:ClassA;
-	b:ClassA;
-	b := self;
+	a:A;
+	b:B;
+	d:D;
+	d := b;
 }
 
-ClassA::ClassA(a:bool)
-{
-
-}

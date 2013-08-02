@@ -1,0 +1,11 @@
+class A{
+	A sum(a:A);
+	A();
+}
+
+A::A(){}
+A A::sum(a:A)
+{
+	a:= a.sum(new A());
+}
+
