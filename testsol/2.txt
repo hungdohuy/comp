@@ -1,1 +1,2 @@
-Unrecognized Char p
+CLASS EOF
+Total token detected is: 2

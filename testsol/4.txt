@@ -1,0 +1,2 @@
+ID(program) ID(end) Unrecognized Char &
+Total token detected is: 2

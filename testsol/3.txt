@@ -1,1 +1,2 @@
-PROGRAM Unrecognized Char +
+CLASS ADD EOF
+Total token detected is: 3

@@ -52,6 +52,7 @@ let print tk =
 	| MUL	->	print_string("MUL ")
 	| INT_DIV	->	print_string("INT_DIV ")
 	| ASSIGN	->	print_string("ASSIGN ")
+	| ASSIGN_CONST	->	print_string("ASSIGN_CONST ")
 	| LESS	->	print_string("LESS ")
 	| LESS_EQUAL	->	print_string("LESS_EQUAL ")
 	| NEQUAL	->	print_string("NEQUAL ")
@@ -80,8 +81,8 @@ let rec pp tk buf =
 let parse_program chan =
   let lexbuf = Lexing.from_channel chan in (
   	try pp Mylexer.token lexbuf
-	  with UnrecognizeChar x -> print_string ("Unrecognized Char "^x^"\n")
-	  | UnrecognizeEscapedChar x -> print_string("UnrecognizeEscapedChar "^x^"\n")
+	  with UnrecognizeChar x -> print_string ("Unrecognized Char "^(String.make 1 x)^"\n")
+	  | UnrecognizeEscapedChar x -> print_string("UnrecognizeEscapedChar "^(String.make 1 x)^"\n")
 	  | UnterminateString -> print_string ("Unterminated string\n")
 	  | UnterminateComment -> print_string ("Unterminated Comment\n")
 ); print_string("Total token detected is: "^(string_of_int !sum)^"\n")
